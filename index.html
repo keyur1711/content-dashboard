@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Performance Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f7fafc;
+            color: #1a202c;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+        }
+
+        .app-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .tab {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab.active {
+            color: white;
+            border-bottom-color: white;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .app-main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .content-calendar, .organic-vs-paid {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .filters-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #718096;
+        }
+
+        .filter-group select {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #718096;
+            border-bottom: 2px solid #e2e8f0;
+            cursor: pointer;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .type-badge, .performance-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .type-private { background: #e6f4ff; color: #0066cc; }
+        .type-shared { background: #fff0e6; color: #d46b08; }
+        .badge-high { background: #d4edda; color: #155724; }
+        .badge-average { background: #fff3cd; color: #856404; }
+        .badge-low { background: #f8d7da; color: #721c24; }
+
+        .platform-icon {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: white;
+            margin-right: 0.5rem;
+        }
+
+        .ig { background: linear-gradient(45deg, #f09433, #dc2743); }
+        .fb { background: #1877f2; }
+        .tt { background: #000000; }
+        .yt { background: #ff0000; }
+
+        .comparison-grid {
+            padding: 2rem;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .comparison-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+        }
+
+        .card-header h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .platform-tag {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            margin: 0.5rem 0.5rem 0 0;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: #e2e8f0;
+            margin: 1rem 0;
+        }
+
+        .metric-column {
+            background: white;
+            padding: 1.5rem;
+        }
+
+        .label {
+            display: block;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            color: #718096;
+        }
+
+        .organic .label { color: #0066cc; }
+        .boosted .label { color: #d46b08; }
+
+        .lift {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            margin-left: 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .hidden { display: none; }
+
+        @media (max-width: 768px) {
+            .comparison-row { grid-template-columns: 1fr; }
+            .app-main { padding: 0 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-header">
+        <h1 class="app-title">Content Performance Dashboard</h1>
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('calendar')">Content Calendar</button>
+            <button class="tab" onclick="showTab('organic')">Organic vs Paid</button>
+        </div>
+    </div>
+
+    <div class="app-main">
+        <!-- Content Calendar Tab -->
+        <div id="calendar-tab" class="content-calendar">
+            <div class="filters-section">
+                <div class="filter-group">
+                    <label>Content Type:</label>
+                    <select id="type-filter" onchange="filterContent()">
+                        <option value="all">All</option>
+                        <option value="private">Private</option>
+                        <option value="shared">Shared</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Performance:</label>
+                    <select id="perf-filter" onchange="filterContent()">
+                        <option value="all">All</option>
+                        <option value="high">High</option>
+                        <option value="average">Average</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Content #</th>
+                            <th>Type</th>
+                            <th>Hook</th>
+                            <th>Posted Date</th>
+                            <th>Performance</th>
+                            <th>Total Views</th>
+                            <th>Platform Views</th>
+                            <th>Avg Retention</th>
+                            <th>Engagement</th>
+                        </tr>
+                    </thead>
+                    <tbody id="content-table-body">
+                        <!-- Content will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Organic vs Paid Tab -->
+        <div id="organic-tab" class="organic-vs-paid hidden">
+            <div class="comparison-grid" id="comparison-grid">
+                <!-- Comparison cards will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock Data
+        const contentData = [
+            {
+                contentNumber: 'Content 646',
+                contentType: 'shared',
+                hook: 'One thing this Sydney hostel does differently',
+                postedDate: '2026-02-07',
+                views: { instagram: 278, facebook: 50, tiktok: 303, youtube: 100 },
+                retention: { instagram: 40, facebook: 30, tiktok: 56, youtube: 45 },
+                likes: 15, comments: 3, saves: 5, shares: 2, newFollows: 1,
+                ads: { tiktok: false, meta: false, google: false },
+                boosted: {
+                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    likes: 0, comments: 0, saves: 0, shares: 0
+                }
+            },
+            {
+                contentNumber: 'Content 661',
+                contentType: 'private',
+                hook: 'This is the smarter way to stay in Sydney',
+                postedDate: '2026-02-11',
+                views: { instagram: 779, facebook: 200, tiktok: 695, youtube: 450 },
+                retention: { instagram: 57, facebook: 42, tiktok: 47, youtube: 55 },
+                likes: 45, comments: 12, saves: 20, shares: 8, newFollows: 5,
+                ads: { tiktok: true, meta: true, google: false },
+                boosted: {
+                    views: { instagram: 1200, facebook: 850, tiktok: 1500, youtube: 450 },
+                    retention: { instagram: 52, facebook: 38, tiktok: 44, youtube: 55 },
+                    likes: 85, comments: 28, saves: 45, shares: 18
+                }
+            },
+            {
+                contentNumber: 'Content 656',
+                contentType: 'shared',
+                hook: "Why weight loss alone isn't always enough?",
+                postedDate: '2026-02-06',
+                views: { instagram: 261, facebook: 120, tiktok: 295, youtube: 80 },
+                retention: { instagram: 19, facebook: 25, tiktok: 45, youtube: 30 },
+                likes: 8, comments: 1, saves: 2, shares: 1, newFollows: 0,
+                ads: { tiktok: false, meta: false, google: false },
+                boosted: {
+                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    likes: 0, comments: 0, saves: 0, shares: 0
+                }
+            },
+            {
+                contentNumber: 'Content 647',
+                contentType: 'private',
+                hook: 'Best coffee spots in Melbourne you need to try',
+                postedDate: '2026-02-05',
+                views: { instagram: 412, facebook: 95, tiktok: 520, youtube: 180 },
+                retention: { instagram: 48, facebook: 35, tiktok: 52, youtube: 42 },
+                likes: 28, comments: 6, saves: 14, shares: 4, newFollows: 3,
+                ads: { tiktok: false, meta: false, google: false },
+                boosted: {
+                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    likes: 0, comments: 0, saves: 0, shares: 0
+                }
+            },
+            {
+                contentNumber: 'Content 648',
+                contentType: 'shared',
+                hook: 'How I plan my week for maximum productivity',
+                postedDate: '2026-02-04',
+                views: { instagram: 189, facebook: 78, tiktok: 245, youtube: 65 },
+                retention: { instagram: 22, facebook: 28, tiktok: 38, youtube: 25 },
+                likes: 6, comments: 2, saves: 8, shares: 1, newFollows: 0,
+                ads: { tiktok: false, meta: false, google: false },
+                boosted: {
+                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    likes: 0, comments: 0, saves: 0, shares: 0
+                }
+            },
+            {
+                contentNumber: 'Content 649',
+                contentType: 'private',
+                hook: 'Hidden beaches in Queensland nobody talks about',
+                postedDate: '2026-02-03',
+                views: { instagram: 890, facebook: 320, tiktok: 1100, youtube: 620 },
+                retention: { instagram: 61, facebook: 48, tiktok: 58, youtube: 55 },
+                likes: 72, comments: 18, saves: 45, shares: 22, newFollows: 12,
+                ads: { tiktok: true, meta: true, google: false },
+                boosted: {
+                    views: { instagram: 2100, facebook: 1200, tiktok: 2800, youtube: 620 },
+                    retention: { instagram: 58, facebook: 45, tiktok: 55, youtube: 54 },
+                    likes: 165, comments: 42, saves: 98, shares: 51
+                }
+            },
+            {
+                contentNumber: 'Content 650',
+                contentType: 'shared',
+                hook: '5 morning habits that changed my energy levels',
+                postedDate: '2026-02-02',
+                views: { instagram: 334, facebook: 110, tiktok: 398, youtube: 140 },
+                retention: { instagram: 35, facebook: 32, tiktok: 44, youtube: 38 },
+                likes: 18, comments: 4, saves: 11, shares: 3, newFollows: 2,
+                ads: { tiktok: false, meta: false, google: false },
+                boosted: {
+                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    likes: 0, comments: 0, saves: 0, shares: 0
+                }
+            },
+            {
+                contentNumber: 'Content 651',
+                contentType: 'private',
+                hook: 'Bondi to Coogee walk: everything you need to know',
+                postedDate: '2026-02-01',
+                views: { instagram: 556, facebook: 185, tiktok: 720, youtube: 290 },
+                retention: { instagram: 52, facebook: 40, tiktok: 50, youtube: 48 },
+                likes: 41, comments: 9, saves: 28, shares: 7, newFollows: 6,
+                ads: { tiktok: false, meta: true, google: false },
+                boosted: {
+                    views: { instagram: 556, facebook: 680, tiktok: 720, youtube: 290 },
+                    retention: { instagram: 52, facebook: 38, tiktok: 50, youtube: 48 },
+                    likes: 41, comments: 9, saves: 28, shares: 7
+                }
+            },
+            {
+                contentNumber: 'Content 652',
+                contentType: 'shared',
+                hook: 'Why you should stop comparing your journey to others',
+                postedDate: '2026-01-31',
+                views: { instagram: 221, facebook: 88, tiktok: 267, youtube: 92 },
+                retention: { instagram: 28, facebook: 26, tiktok: 41, youtube: 32 },
+                likes: 12, comments: 5, saves: 6, shares: 2, newFollows: 1,
+                ads: { tiktok: false, meta: false, google: false },
+                boosted: {
+                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    likes: 0, comments: 0, saves: 0, shares: 0
+                }
+            },
+            {
+                contentNumber: 'Content 653',
+                contentType: 'private',
+                hook: 'Ultimate guide to the Great Ocean Road',
+                postedDate: '2026-01-30',
+                views: { instagram: 1020, facebook: 410, tiktok: 1350, youtube: 780 },
+                retention: { instagram: 58, facebook: 46, tiktok: 54, youtube: 58 },
+                likes: 95, comments: 24, saves: 62, shares: 19, newFollows: 15,
+                ads: { tiktok: true, meta: true, google: true },
+                boosted: {
+                    views: { instagram: 2400, facebook: 1500, tiktok: 3200, youtube: 1200 },
+                    retention: { instagram: 55, facebook: 43, tiktok: 51, youtube: 56 },
+                    likes: 210, comments: 55, saves: 135, shares: 42
+                }
+            },
+            {
+                contentNumber: 'Content 654',
+                contentType: 'shared',
+                hook: 'Simple meal prep ideas for busy weekdays',
+                postedDate: '2026-01-29',
+                views: { instagram: 278, facebook: 102, tiktok: 355, youtube: 115 },
+                retention: { instagram: 38, facebook: 33, tiktok: 46, youtube: 40 },
+                likes: 22, comments: 7, saves: 19, shares: 4, newFollows: 2,
+                ads: { tiktok: false, meta: false, google: false },
+                boosted: {
+                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    likes: 0, comments: 0, saves: 0, shares: 0
+                }
+            },
+            {
+                contentNumber: 'Content 655',
+                contentType: 'private',
+                hook: 'Sunrise at Uluru: what they don\'t tell you',
+                postedDate: '2026-01-28',
+                views: { instagram: 678, facebook: 245, tiktok: 820, youtube: 420 },
+                retention: { instagram: 55, facebook: 44, tiktok: 52, youtube: 52 },
+                likes: 58, comments: 14, saves: 38, shares: 11, newFollows: 8,
+                ads: { tiktok: true, meta: false, google: false },
+                boosted: {
+                    views: { instagram: 678, facebook: 245, tiktok: 1950, youtube: 420 },
+                    retention: { instagram: 55, facebook: 44, tiktok: 49, youtube: 52 },
+                    likes: 58, comments: 14, saves: 38, shares: 11
+                }
+            },
+            {
+                contentNumber: 'Content 657',
+                contentType: 'shared',
+                hook: 'How to stay motivated when results are slow',
+                postedDate: '2026-01-27',
+                views: { instagram: 195, facebook: 72, tiktok: 228, youtube: 88 },
+                retention: { instagram: 24, facebook: 22, tiktok: 35, youtube: 28 },
+                likes: 9, comments: 3, saves: 5, shares: 1, newFollows: 0,
+                ads: { tiktok: false, meta: false, google: false },
+                boosted: {
+                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    likes: 0, comments: 0, saves: 0, shares: 0
+                }
+            },
+            {
+                contentNumber: 'Content 658',
+                contentType: 'private',
+                hook: 'Sydney Harbour Bridge climb: worth the price?',
+                postedDate: '2026-01-26',
+                views: { instagram: 445, facebook: 165, tiktok: 580, youtube: 255 },
+                retention: { instagram: 46, facebook: 38, tiktok: 48, youtube: 45 },
+                likes: 35, comments: 8, saves: 21, shares: 5, newFollows: 4,
+                ads: { tiktok: false, meta: false, google: false },
+                boosted: {
+                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    likes: 0, comments: 0, saves: 0, shares: 0
+                }
+            },
+            {
+                contentNumber: 'Content 659',
+                contentType: 'shared',
+                hook: 'The one thing that improved my sleep quality',
+                postedDate: '2026-01-25',
+                views: { instagram: 312, facebook: 118, tiktok: 390, youtube: 165 },
+                retention: { instagram: 42, facebook: 36, tiktok: 47, youtube: 42 },
+                likes: 26, comments: 6, saves: 16, shares: 4, newFollows: 3,
+                ads: { tiktok: false, meta: false, google: false },
+                boosted: {
+                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    likes: 0, comments: 0, saves: 0, shares: 0
+                }
+            },
+            {
+                contentNumber: 'Content 660',
+                contentType: 'private',
+                hook: 'Kangaroo Island in 48 hours: full itinerary',
+                postedDate: '2026-01-24',
+                views: { instagram: 534, facebook: 198, tiktok: 645, youtube: 310 },
+                retention: { instagram: 50, facebook: 41, tiktok: 49, youtube: 50 },
+                likes: 48, comments: 11, saves: 32, shares: 9, newFollows: 7,
+                ads: { tiktok: false, meta: true, google: false },
+                boosted: {
+                    views: { instagram: 534, facebook: 720, tiktok: 645, youtube: 310 },
+                    retention: { instagram: 50, facebook: 39, tiktok: 49, youtube: 50 },
+                    likes: 48, comments: 11, saves: 32, shares: 9
+                }
+            },
+            {
+                contentNumber: 'Content 662',
+                contentType: 'shared',
+                hook: 'Budget travel tips that actually work',
+                postedDate: '2026-01-23',
+                views: { instagram: 367, facebook: 142, tiktok: 478, youtube: 198 },
+                retention: { instagram: 44, facebook: 38, tiktok: 51, youtube: 44 },
+                likes: 31, comments: 8, saves: 24, shares: 6, newFollows: 4,
+                ads: { tiktok: false, meta: false, google: false },
+                boosted: {
+                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    likes: 0, comments: 0, saves: 0, shares: 0
+                }
+            },
+            {
+                contentNumber: 'Content 663',
+                contentType: 'private',
+                hook: 'Blue Mountains day trip: best lookouts and walks',
+                postedDate: '2026-01-22',
+                views: { instagram: 723, facebook: 278, tiktok: 890, youtube: 465 },
+                retention: { instagram: 54, facebook: 43, tiktok: 52, youtube: 52 },
+                likes: 62, comments: 15, saves: 41, shares: 12, newFollows: 9,
+                ads: { tiktok: true, meta: false, google: false },
+                boosted: {
+                    views: { instagram: 723, facebook: 278, tiktok: 2100, youtube: 465 },
+                    retention: { instagram: 54, facebook: 43, tiktok: 50, youtube: 52 },
+                    likes: 62, comments: 15, saves: 41, shares: 12
+                }
+            },
+            {
+                contentNumber: 'Content 664',
+                contentType: 'shared',
+                hook: 'Why rest days are just as important as workout days',
+                postedDate: '2026-01-21',
+                views: { instagram: 248, facebook: 92, tiktok: 302, youtube: 108 },
+                retention: { instagram: 32, facebook: 29, tiktok: 42, youtube: 35 },
+                likes: 17, comments: 4, saves: 9, shares: 2, newFollows: 1,
+                ads: { tiktok: false, meta: false, google: false },
+                boosted: {
+                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    likes: 0, comments: 0, saves: 0, shares: 0
+                }
+            },
+            {
+                contentNumber: 'Content 665',
+                contentType: 'private',
+                hook: 'Byron Bay: local secrets and hidden spots',
+                postedDate: '2026-01-20',
+                views: { instagram: 612, facebook: 228, tiktok: 755, youtube: 385 },
+                retention: { instagram: 51, facebook: 42, tiktok: 53, youtube: 49 },
+                likes: 52, comments: 13, saves: 35, shares: 10, newFollows: 6,
+                ads: { tiktok: false, meta: false, google: false },
+                boosted: {
+                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+                    likes: 0, comments: 0, saves: 0, shares: 0
+                }
+            }
+        ];
+
+        // Calculate performance
+        function calculatePerformance(item) {
+            const avgRetention = (item.retention.instagram + item.retention.facebook + 
+                                 item.retention.tiktok + item.retention.youtube) / 4;
+            const totalViews = item.views.instagram + item.views.facebook + 
+                              item.views.tiktok + item.views.youtube;
+            const engagementRate = ((item.likes + item.comments + item.saves + item.shares) / totalViews) * 100;
+            
+            if (avgRetention > 40 || engagementRate > 5) return 'high';
+            if (avgRetention < 25 && engagementRate < 2) return 'low';
+            return 'average';
+        }
+
+        // Render content calendar
+        function renderContentCalendar() {
+            const tbody = document.getElementById('content-table-body');
+            const typeFilter = document.getElementById('type-filter').value;
+            const perfFilter = document.getElementById('perf-filter').value;
+            
+            const filtered = contentData.filter(item => {
+                if (typeFilter !== 'all' && item.contentType !== typeFilter) return false;
+                if (perfFilter !== 'all' && calculatePerformance(item) !== perfFilter) return false;
+                return true;
+            });
+
+            tbody.innerHTML = filtered.map(item => {
+                const totalViews = item.views.instagram + item.views.facebook + 
+                                  item.views.tiktok + item.views.youtube;
+                const avgRetention = ((item.retention.instagram + item.retention.facebook + 
+                                      item.retention.tiktok + item.retention.youtube) / 4).toFixed(1);
+                const performance = calculatePerformance(item);
+
+                return `
+                    <tr>
+                        <td>${item.contentNumber}</td>
+                        <td><span class="type-badge type-${item.contentType}">${item.contentType}</span></td>
+                        <td>${item.hook}</td>
+                        <td>${new Date(item.postedDate).toLocaleDateString()}</td>
+                        <td><span class="performance-badge badge-${performance}">${performance}</span></td>
+                        <td><strong>${totalViews.toLocaleString()}</strong></td>
+                        <td>
+                            <div><span class="platform-icon ig">IG</span>${item.views.instagram}</div>
+                            <div><span class="platform-icon fb">FB</span>${item.views.facebook}</div>
+                            <div><span class="platform-icon tt">TT</span>${item.views.tiktok}</div>
+                            <div><span class="platform-icon yt">YT</span>${item.views.youtube}</div>
+                        </td>
+                        <td>${avgRetention}%</td>
+                        <td>
+                            <div>❤️ ${item.likes}</div>
+                            <div>💬 ${item.comments}</div>
+                            <div>🔖 ${item.saves}</div>
+                            <div>🔄 ${item.shares}</div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Render organic vs paid
+        function renderOrganicVsPaid() {
+            const grid = document.getElementById('comparison-grid');
+            const boosted = contentData.filter(item => item.ads.tiktok || item.ads.meta || item.ads.google);
+
+            if (boosted.length === 0) {
+                grid.innerHTML = '<div style="text-align:center; padding:4rem; color:#718096;"><p>No boosted content found.</p></div>';
+                return;
+            }
+
+            grid.innerHTML = boosted.map(item => {
+                const calculateLift = (organic, boosted) => {
+                    if (organic === 0) return 0;
+                    return (((boosted - organic) / organic) * 100).toFixed(1);
+                };
+
+                return `
+                    <div class="comparison-card">
+                        <div class="card-header">
+                            <h3>${item.contentNumber}</h3>
+                            <p>${item.hook}</p>
+                            <div>
+                                ${item.ads.tiktok ? '<span class="platform-tag">TikTok Ads</span>' : ''}
+                                ${item.ads.meta ? '<span class="platform-tag">Meta Ads</span>' : ''}
+                                ${item.ads.google ? '<span class="platform-tag">Google Ads</span>' : ''}
+                            </div>
+                        </div>
+                        
+                        <div style="padding: 1.5rem;">
+                            <h4 style="margin-bottom: 1rem;">Views Comparison</h4>
+                            <div class="comparison-row">
+                                <div class="metric-column organic">
+                                    <span class="label">Organic</span>
+                                    <div>IG: ${item.views.instagram.toLocaleString()}</div>
+                                    <div>FB: ${item.views.facebook.toLocaleString()}</div>
+                                    <div>TT: ${item.views.tiktok.toLocaleString()}</div>
+                                    <div>YT: ${item.views.youtube.toLocaleString()}</div>
+                                </div>
+                                <div class="metric-column boosted">
+                                    <span class="label">Boosted</span>
+                                    <div>IG: ${item.boosted.views.instagram.toLocaleString()} <span class="lift">+${calculateLift(item.views.instagram, item.boosted.views.instagram)}%</span></div>
+                                    <div>FB: ${item.boosted.views.facebook.toLocaleString()} <span class="lift">+${calculateLift(item.views.facebook, item.boosted.views.facebook)}%</span></div>
+                                    <div>TT: ${item.boosted.views.tiktok.toLocaleString()} <span class="lift">+${calculateLift(item.views.tiktok, item.boosted.views.tiktok)}%</span></div>
+                                    <div>YT: ${item.boosted.views.youtube.toLocaleString()}</div>
+                                </div>
+                            </div>
+
+                            <h4 style="margin: 2rem 0 1rem;">Engagement Comparison</h4>
+                            <div class="comparison-row">
+                                <div class="metric-column organic">
+                                    <span class="label">Organic</span>
+                                    <div>❤️ ${item.likes}</div>
+                                    <div>💬 ${item.comments}</div>
+                                    <div>🔖 ${item.saves}</div>
+                                    <div>🔄 ${item.shares}</div>
+                                </div>
+                                <div class="metric-column boosted">
+                                    <span class="label">Boosted</span>
+                                    <div>❤️ ${item.boosted.likes} <span class="lift">+${calculateLift(item.likes, item.boosted.likes)}%</span></div>
+                                    <div>💬 ${item.boosted.comments} <span class="lift">+${calculateLift(item.comments, item.boosted.comments)}%</span></div>
+                                    <div>🔖 ${item.boosted.saves} <span class="lift">+${calculateLift(item.saves, item.boosted.saves)}%</span></div>
+                                    <div>🔄 ${item.boosted.shares} <span class="lift">+${calculateLift(item.shares, item.boosted.shares)}%</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Tab switching
+        function showTab(tab) {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (tab === 'calendar') {
+                document.getElementById('calendar-tab').classList.remove('hidden');
+                document.getElementById('organic-tab').classList.add('hidden');
+                renderContentCalendar();
+            } else {
+                document.getElementById('calendar-tab').classList.add('hidden');
+                document.getElementById('organic-tab').classList.remove('hidden');
+                renderOrganicVsPaid();
+            }
+        }
+
+        // Filter content
+        function filterContent() {
+            renderContentCalendar();
+        }
+
+        // Initialize
+        renderContentCalendar();
+    </script>
+</body>
+</html>
