@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,10 +66,11 @@
             padding: 0 2rem;
         }
 
-        .content-calendar, .organic-vs-paid {
+        .content-calendar,
+        .organic-vs-paid {
             background: white;
             border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
 
@@ -123,7 +125,8 @@
             background: #f8f9fa;
         }
 
-        .type-badge, .performance-badge {
+        .type-badge,
+        .performance-badge {
             display: inline-block;
             padding: 0.35rem 0.75rem;
             border-radius: 20px;
@@ -131,11 +134,35 @@
             font-weight: 600;
         }
 
-        .type-private { background: #e6f4ff; color: #0066cc; }
-        .type-shared { background: #fff0e6; color: #d46b08; }
-        .badge-high { background: #d4edda; color: #155724; }
-        .badge-average { background: #fff3cd; color: #856404; }
-        .badge-low { background: #f8d7da; color: #721c24; }
+        .type-private {
+            background: #e6f4ff;
+            color: #0066cc;
+        }
+
+        .type-shared {
+            background: #fff0e6;
+            color: #d46b08;
+        }
+
+        .type-video {
+            background: #fce7f3;
+            color: #be185d;
+        }
+
+        .badge-high {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-average {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-low {
+            background: #f8d7da;
+            color: #721c24;
+        }
 
         .platform-icon {
             display: inline-block;
@@ -150,10 +177,21 @@
             margin-right: 0.5rem;
         }
 
-        .ig { background: linear-gradient(45deg, #f09433, #dc2743); }
-        .fb { background: #1877f2; }
-        .tt { background: #000000; }
-        .yt { background: #ff0000; }
+        .ig {
+            background: linear-gradient(45deg, #f09433, #dc2743);
+        }
+
+        .fb {
+            background: #1877f2;
+        }
+
+        .tt {
+            background: #000000;
+        }
+
+        .yt {
+            background: #ff0000;
+        }
 
         .comparison-grid {
             padding: 2rem;
@@ -210,8 +248,13 @@
             color: #718096;
         }
 
-        .organic .label { color: #0066cc; }
-        .boosted .label { color: #d46b08; }
+        .organic .label {
+            color: #0066cc;
+        }
+
+        .boosted .label {
+            color: #d46b08;
+        }
 
         .lift {
             display: inline-block;
@@ -224,14 +267,92 @@
             color: #155724;
         }
 
-        .hidden { display: none; }
+        .hidden {
+            display: none;
+        }
+
+        .api-key-section {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .api-key-section label {
+            font-weight: 600;
+            color: #718096;
+        }
+
+        .api-key-section input {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            min-width: 280px;
+        }
+
+        .api-key-section button {
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .api-key-section button:hover {
+            opacity: 0.9;
+        }
+
+        .youtube-tab .api-key-section .status {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .youtube-tab .yt-refresh-btn {
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .youtube-tab .yt-refresh-btn:hover {
+            opacity: 0.9;
+        }
+
+        .youtube-tab table {
+            margin: 0;
+        }
+
+        .yt-loading,
+        .yt-error {
+            padding: 2rem;
+            text-align: center;
+            color: #718096;
+        }
+
+        .yt-error {
+            color: #721c24;
+        }
 
         @media (max-width: 768px) {
-            .comparison-row { grid-template-columns: 1fr; }
-            .app-main { padding: 0 1rem; }
+            .comparison-row {
+                grid-template-columns: 1fr;
+            }
+
+            .app-main {
+                padding: 0 1rem;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="app-header">
         <h1 class="app-title">Content Performance Dashboard</h1>
@@ -247,7 +368,7 @@
             <div class="filters-section">
                 <div class="filter-group">
                     <label>Content Type:</label>
-                    <select id="type-filter" onchange="filterContent()">
+                    <select id="type-filter" aria-label="Content type filter" onchange="filterContent()">
                         <option value="all">All</option>
                         <option value="private">Private</option>
                         <option value="shared">Shared</option>
@@ -255,7 +376,7 @@
                 </div>
                 <div class="filter-group">
                     <label>Performance:</label>
-                    <select id="perf-filter" onchange="filterContent()">
+                    <select id="perf-filter" aria-label="Performance filter" onchange="filterContent()">
                         <option value="all">All</option>
                         <option value="high">High</option>
                         <option value="average">Average</option>
@@ -275,7 +396,7 @@
                             <th>Performance</th>
                             <th>Total Views</th>
                             <th>Platform Views</th>
-                            <th>Avg Retention</th>
+                            <th>Eng. Rate</th>
                             <th>Engagement</th>
                         </tr>
                     </thead>
@@ -292,9 +413,328 @@
                 <!-- Comparison cards will be inserted here by JavaScript -->
             </div>
         </div>
+
     </div>
 
     <script>
+        // YouTube Data API – paste your key in index.html here (no frontend input)
+        const YOUTUBE_CHANNEL_USERNAME = 'AzzurroPodHotels';
+        const YOUTUBE_API_KEY = 'AIzaSyAY_jyp31H9jT5jgQkM2DcTKdayuHeygbY'; // Paste your YouTube Data API v3 key here
+        // Apify dataset URLs for Instagram, Facebook, TikTok (paste your dataset URLs here)
+        const APIFY_INSTAGRAM_URL = 'https://api.apify.com/v2/datasets/jG6jwmOcAaItbN3E7/items?token=apify_api_36Cw17e9xBqjASJE1GRVYwHiRPAR1P2mafom';
+        const APIFY_FACEBOOK_URL = 'https://api.apify.com/v2/datasets/5Qce7KgukXmcAPw2T/items?token=apify_api_36Cw17e9xBqjASJE1GRVYwHiRPAR1P2mafom';
+        const APIFY_TIKTOK_URL = 'https://api.apify.com/v2/datasets/vCdkByYjOkDckGfp9/items?token=apify_api_36Cw17e9xBqjASJE1GRVYwHiRPAR1P2mafom';
+        let youtubeVideos = [];
+        let instagramPosts = [];
+        let facebookPosts = [];
+        let tiktokPosts = [];
+        let liveContent = [];
+
+        function setYoutubeStatus(msg, isError) {
+            var el = document.getElementById('youtube-status');
+            if (el) { el.textContent = msg; el.style.color = isError ? '#721c24' : '#718096'; }
+        }
+
+        function buildLiveContent() {
+            // Helper: extract YYYY-MM-DD date key from a date string
+            function dateKey(s) {
+                if (!s) return null;
+                var d = new Date(s);
+                if (isNaN(d.getTime())) return null;
+                return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+            }
+
+            // Build a map: dateKey -> { yt: [], ig: [], fb: [], tt: [] }
+            var byDate = {};
+
+            youtubeVideos.forEach(function (v) {
+                var k = dateKey(v.publishedAt);
+                if (!k) return;
+                if (!byDate[k]) byDate[k] = { yt: [], ig: [], fb: [], tt: [] };
+                byDate[k].yt.push(v);
+            });
+            instagramPosts.forEach(function (p) {
+                var k = dateKey(p.postedDate);
+                if (!k) return;
+                if (!byDate[k]) byDate[k] = { yt: [], ig: [], fb: [], tt: [] };
+                byDate[k].ig.push(p);
+            });
+            facebookPosts.forEach(function (p) {
+                var k = dateKey(p.postedDate);
+                if (!k) return;
+                if (!byDate[k]) byDate[k] = { yt: [], ig: [], fb: [], tt: [] };
+                byDate[k].fb.push(p);
+            });
+            tiktokPosts.forEach(function (p) {
+                var k = dateKey(p.postedDate);
+                if (!k) return;
+                if (!byDate[k]) byDate[k] = { yt: [], ig: [], fb: [], tt: [] };
+                byDate[k].tt.push(p);
+            });
+
+            // For each date, produce one row per YouTube video (or one row if no YT)
+            // IG/FB/TT posts on the same day are distributed by index; extras get their own rows
+            var list = [];
+            var sortedDates = Object.keys(byDate).sort(function (a, b) { return b.localeCompare(a); });
+
+            sortedDates.forEach(function (k) {
+                var day = byDate[k];
+                var numRows = Math.max(day.yt.length, day.ig.length, day.fb.length, day.tt.length, 1);
+
+                for (var i = 0; i < numRows; i++) {
+                    var y = day.yt[i] || null;
+                    var insta = day.ig[i] || null;
+                    var face = day.fb[i] || null;
+                    var tik = day.tt[i] || null;
+
+                    var viewsYt = y ? (parseInt(y.viewCount, 10) || 0) : 0;
+                    var viewsIg = insta ? (insta.views || 0) : 0;
+                    var viewsFb = face ? (face.views || 0) : 0;
+                    var viewsTt = tik ? (tik.views || 0) : 0;
+
+                    var likes = (y ? parseInt(y.likeCount, 10) || 0 : 0)
+                        + (insta ? insta.likes || 0 : 0)
+                        + (face ? face.likes || 0 : 0)
+                        + (tik ? tik.likes || 0 : 0);
+                    var comments = (y ? parseInt(y.commentCount, 10) || 0 : 0)
+                        + (insta ? insta.comments || 0 : 0)
+                        + (face ? face.comments || 0 : 0)
+                        + (tik ? tik.comments || 0 : 0);
+                    var saves = (insta ? insta.saves || 0 : 0) + (tik ? tik.saves || 0 : 0);
+                    var shares = (face ? face.shares || 0 : 0) + (tik ? tik.shares || 0 : 0);
+
+                    var hook = (y && y.title) || (insta && insta.hook) || (face && face.hook) || (tik && tik.hook) || 'Content';
+                    var postedDate = (y && y.publishedAt) || (insta && insta.postedDate) || (face && face.postedDate) || (tik && tik.postedDate) || k;
+                    var url = (y && ('https://www.youtube.com/watch?v=' + (y.videoId || ''))) || (insta && insta.url) || (face && face.url) || (tik && tik.url) || '#';
+
+                    list.push({
+                        postedDate: postedDate,
+                        hook: hook,
+                        url: url,
+                        views: { ig: viewsIg, fb: viewsFb, tt: viewsTt, yt: viewsYt },
+                        likes: likes,
+                        comments: comments,
+                        saves: saves,
+                        shares: shares
+                    });
+                }
+            });
+
+            liveContent = list;
+        }
+
+        function liveItemPerformance(item) {
+            var total = (item.views.ig || 0) + (item.views.fb || 0) + (item.views.tt || 0) + (item.views.yt || 0);
+            var engagement = (item.likes || 0) + (item.comments || 0) + (item.saves || 0) + (item.shares || 0);
+            var rate = total > 0 ? (engagement / total) * 100 : 0;
+            if (rate > 5 || total > 10000) return 'high';
+            if (rate < 1 && total < 1000) return 'low';
+            return 'average';
+        }
+
+        async function fetchInstagramData() {
+            if (!APIFY_INSTAGRAM_URL) return;
+            try {
+                var res = await fetch(APIFY_INSTAGRAM_URL);
+                var data = await res.json();
+                if (!Array.isArray(data)) return;
+                instagramPosts = data.map(function (p) {
+                    var caption = (p.caption || '').trim();
+                    var hook = caption.length > 80 ? caption.substring(0, 77) + '...' : caption;
+                    var views = parseInt(p.videoViewCount, 10) || parseInt(p.videoPlayCount, 10) || 0;
+                    return {
+                        hook: hook,
+                        postedDate: p.timestamp || '',
+                        url: p.url || '',
+                        views: views,
+                        likes: parseInt(p.likesCount, 10) || 0,
+                        comments: parseInt(p.commentsCount, 10) || 0,
+                        saves: 0,
+                        shares: 0
+                    };
+                });
+            } catch (e) { instagramPosts = []; }
+        }
+
+        async function fetchFacebookData() {
+            if (!APIFY_FACEBOOK_URL) return;
+            try {
+                var res = await fetch(APIFY_FACEBOOK_URL);
+                var data = await res.json();
+                if (!Array.isArray(data)) return;
+                facebookPosts = data.filter(function (p) { return p.isVideo; }).map(function (p) {
+                    var text = (p.text || '').trim();
+                    var hook = text.length > 80 ? text.substring(0, 77) + '...' : text;
+                    return {
+                        hook: hook,
+                        postedDate: p.time || '',
+                        url: p.url || p.topLevelUrl || '',
+                        views: parseInt(p.viewsCount, 10) || 0,
+                        likes: parseInt(p.likes, 10) || 0,
+                        comments: 0,
+                        shares: parseInt(p.shares, 10) || 0
+                    };
+                });
+            } catch (e) { facebookPosts = []; }
+        }
+
+        async function fetchTiktokData() {
+            if (!APIFY_TIKTOK_URL) return;
+            try {
+                var res = await fetch(APIFY_TIKTOK_URL);
+                var data = await res.json();
+                if (!Array.isArray(data)) return;
+                tiktokPosts = data.map(function (p) {
+                    var text = (p.text || '').trim();
+                    var hook = text.length > 80 ? text.substring(0, 77) + '...' : text;
+                    return {
+                        hook: hook,
+                        postedDate: p.createTimeISO || '',
+                        url: p.webVideoUrl || '',
+                        views: parseInt(p.playCount, 10) || 0,
+                        likes: parseInt(p.diggCount, 10) || 0,
+                        comments: parseInt(p.commentCount, 10) || 0,
+                        saves: parseInt(p.collectCount, 10) || 0,
+                        shares: parseInt(p.shareCount, 10) || 0
+                    };
+                });
+            } catch (e) { tiktokPosts = []; }
+        }
+
+        async function fetchAllLiveData() {
+            setYoutubeStatus('Loading all platforms…');
+            try {
+                await Promise.all([
+                    fetchYouTubeData(true),
+                    fetchInstagramData(),
+                    fetchFacebookData(),
+                    fetchTiktokData()
+                ]);
+                buildLiveContent();
+                renderContentCalendar();
+                setYoutubeStatus('YT: ' + youtubeVideos.length + ', IG: ' + instagramPosts.length + ', FB: ' + facebookPosts.length + ', TT: ' + tiktokPosts.length);
+            } catch (e) {
+                setYoutubeStatus('Error: ' + (e && e.message ? e.message : 'Failed'), true);
+            }
+        }
+
+        async function fetchYouTubeData(skipUi) {
+            if (!YOUTUBE_API_KEY) {
+                setYoutubeStatus('Set YOUTUBE_API_KEY in index.html (script, near top).', true);
+                return;
+            }
+            try {
+                var uploadsId = null;
+                var channelRes = await fetch('https://www.googleapis.com/youtube/v3/channels?part=contentDetails,snippet&forUsername=' + encodeURIComponent(YOUTUBE_CHANNEL_USERNAME) + '&key=' + encodeURIComponent(YOUTUBE_API_KEY));
+                var channelJson = await channelRes.json();
+                if (channelJson.error) throw new Error(channelJson.error.message || 'Channel request failed');
+                var items = channelJson.items || [];
+                if (items.length > 0) {
+                    uploadsId = items[0].contentDetails.relatedPlaylists.uploads;
+                } else {
+                    var searchRes = await fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=' + encodeURIComponent(YOUTUBE_CHANNEL_USERNAME) + '&maxResults=5&key=' + encodeURIComponent(YOUTUBE_API_KEY));
+                    var searchJson = await searchRes.json();
+                    if (searchJson.error) throw new Error(searchJson.error.message || 'Search failed');
+                    var searchItems = searchJson.items || [];
+                    var channelId = null;
+                    for (var s = 0; s < searchItems.length; s++) {
+                        var cid = searchItems[s].snippet && searchItems[s].snippet.channelId;
+                        if (cid) { channelId = cid; break; }
+                    }
+                    if (!channelId) throw new Error('Channel not found: ' + YOUTUBE_CHANNEL_USERNAME);
+                    var channelByIdRes = await fetch('https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=' + encodeURIComponent(channelId) + '&key=' + encodeURIComponent(YOUTUBE_API_KEY));
+                    var channelByIdJson = await channelByIdRes.json();
+                    if (channelByIdJson.error || !channelByIdJson.items || channelByIdJson.items.length === 0) throw new Error('Channel not found: ' + YOUTUBE_CHANNEL_USERNAME);
+                    uploadsId = channelByIdJson.items[0].contentDetails.relatedPlaylists.uploads;
+                }
+
+                var playlistRes = await fetch('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=50&playlistId=' + encodeURIComponent(uploadsId) + '&key=' + encodeURIComponent(YOUTUBE_API_KEY));
+                var playlistJson = await playlistRes.json();
+                if (playlistJson.error) throw new Error(playlistJson.error.message || 'Playlist request failed');
+                var playlistItems = playlistJson.items || [];
+                var videoIds = playlistItems.map(function (i) {
+                    return (i.contentDetails && i.contentDetails.videoId) || (i.snippet && i.snippet.resourceId && i.snippet.resourceId.videoId) || '';
+                }).filter(Boolean);
+                if (videoIds.length === 0) {
+                    youtubeVideos = [];
+                    mergeYouTubeIntoContentData(youtubeVideos);
+                    setYoutubeStatus('No videos found.');
+                    return;
+                }
+
+                var videos = [];
+                for (var i = 0; i < videoIds.length; i += 50) {
+                    var batch = videoIds.slice(i, i + 50);
+                    var videosRes = await fetch('https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=' + batch.join(',') + '&key=' + encodeURIComponent(YOUTUBE_API_KEY));
+                    var videosJson = await videosRes.json();
+                    if (videosJson.error) throw new Error(videosJson.error.message || 'Videos request failed');
+                    var list = videosJson.items || [];
+                    list.forEach(function (v) {
+                        var sn = v.snippet || {};
+                        var stat = v.statistics || {};
+                        videos.push({
+                            videoId: v.id,
+                            title: sn.title || 'Untitled',
+                            publishedAt: sn.publishedAt || '',
+                            viewCount: parseInt(stat.viewCount, 10) || 0,
+                            likeCount: parseInt(stat.likeCount, 10) || 0,
+                            commentCount: parseInt(stat.commentCount, 10) || 0
+                        });
+                    });
+                }
+                youtubeVideos = videos;
+                mergeYouTubeIntoContentData(youtubeVideos);
+                setYoutubeStatus('Fetched ' + youtubeVideos.length + ' video(s).');
+            } catch (err) {
+                youtubeVideos = [];
+                setYoutubeStatus('Error: ' + (err.message || 'Failed to fetch'), true);
+            }
+        }
+
+        function mergeYouTubeIntoContentData(videos) {
+            if (!videos || videos.length === 0) return;
+            // Match by date: for each contentData row, find closest YouTube video by date and set views.youtube (and optional engagement)
+            const parseDate = function (s) {
+                if (!s) return 0;
+                const d = new Date(s);
+                return isNaN(d.getTime()) ? 0 : d.getTime();
+            };
+            contentData.forEach(function (row) {
+                const rowTime = parseDate(row.postedDate);
+                if (!rowTime) return;
+                let best = null;
+                let bestDiff = Infinity;
+                videos.forEach(function (v) {
+                    const vt = parseDate(v.publishedAt);
+                    if (!vt) return;
+                    const diff = Math.abs(rowTime - vt);
+                    if (diff < bestDiff) { bestDiff = diff; best = v; }
+                });
+                if (best) row.views.youtube = best.viewCount;
+            });
+        }
+
+        function youtubePerformance(v) {
+            var total = v.viewCount || 0;
+            var engagement = (v.likeCount || 0) + (v.commentCount || 0);
+            var rate = total > 0 ? (engagement / total) * 100 : 0;
+            if (rate > 5 || total > 10000) return 'high';
+            if (rate < 1 && total < 1000) return 'low';
+            return 'average';
+        }
+
+        function renderYouTubeTable() {
+            buildLiveContent();
+            renderContentCalendar();
+        }
+
+        function escapeHtml(s) {
+            if (!s) return '';
+            const div = document.createElement('div');
+            div.textContent = s;
+            return div.innerHTML;
+        }
+
         // Mock Data
         const contentData = [
             {
@@ -343,253 +783,13 @@
                 }
             },
             {
-                contentNumber: 'Content 647',
-                contentType: 'private',
-                hook: 'Best coffee spots in Melbourne you need to try',
-                postedDate: '2026-02-05',
-                views: { instagram: 412, facebook: 95, tiktok: 520, youtube: 180 },
-                retention: { instagram: 48, facebook: 35, tiktok: 52, youtube: 42 },
-                likes: 28, comments: 6, saves: 14, shares: 4, newFollows: 3,
-                ads: { tiktok: false, meta: false, google: false },
-                boosted: {
-                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    likes: 0, comments: 0, saves: 0, shares: 0
-                }
-            },
-            {
-                contentNumber: 'Content 648',
-                contentType: 'shared',
-                hook: 'How I plan my week for maximum productivity',
-                postedDate: '2026-02-04',
-                views: { instagram: 189, facebook: 78, tiktok: 245, youtube: 65 },
-                retention: { instagram: 22, facebook: 28, tiktok: 38, youtube: 25 },
-                likes: 6, comments: 2, saves: 8, shares: 1, newFollows: 0,
-                ads: { tiktok: false, meta: false, google: false },
-                boosted: {
-                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    likes: 0, comments: 0, saves: 0, shares: 0
-                }
-            },
-            {
-                contentNumber: 'Content 649',
-                contentType: 'private',
-                hook: 'Hidden beaches in Queensland nobody talks about',
-                postedDate: '2026-02-03',
-                views: { instagram: 890, facebook: 320, tiktok: 1100, youtube: 620 },
-                retention: { instagram: 61, facebook: 48, tiktok: 58, youtube: 55 },
-                likes: 72, comments: 18, saves: 45, shares: 22, newFollows: 12,
-                ads: { tiktok: true, meta: true, google: false },
-                boosted: {
-                    views: { instagram: 2100, facebook: 1200, tiktok: 2800, youtube: 620 },
-                    retention: { instagram: 58, facebook: 45, tiktok: 55, youtube: 54 },
-                    likes: 165, comments: 42, saves: 98, shares: 51
-                }
-            },
-            {
-                contentNumber: 'Content 650',
-                contentType: 'shared',
-                hook: '5 morning habits that changed my energy levels',
-                postedDate: '2026-02-02',
-                views: { instagram: 334, facebook: 110, tiktok: 398, youtube: 140 },
-                retention: { instagram: 35, facebook: 32, tiktok: 44, youtube: 38 },
-                likes: 18, comments: 4, saves: 11, shares: 3, newFollows: 2,
-                ads: { tiktok: false, meta: false, google: false },
-                boosted: {
-                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    likes: 0, comments: 0, saves: 0, shares: 0
-                }
-            },
-            {
-                contentNumber: 'Content 651',
-                contentType: 'private',
-                hook: 'Bondi to Coogee walk: everything you need to know',
-                postedDate: '2026-02-01',
-                views: { instagram: 556, facebook: 185, tiktok: 720, youtube: 290 },
-                retention: { instagram: 52, facebook: 40, tiktok: 50, youtube: 48 },
-                likes: 41, comments: 9, saves: 28, shares: 7, newFollows: 6,
-                ads: { tiktok: false, meta: true, google: false },
-                boosted: {
-                    views: { instagram: 556, facebook: 680, tiktok: 720, youtube: 290 },
-                    retention: { instagram: 52, facebook: 38, tiktok: 50, youtube: 48 },
-                    likes: 41, comments: 9, saves: 28, shares: 7
-                }
-            },
-            {
-                contentNumber: 'Content 652',
-                contentType: 'shared',
-                hook: 'Why you should stop comparing your journey to others',
-                postedDate: '2026-01-31',
-                views: { instagram: 221, facebook: 88, tiktok: 267, youtube: 92 },
-                retention: { instagram: 28, facebook: 26, tiktok: 41, youtube: 32 },
-                likes: 12, comments: 5, saves: 6, shares: 2, newFollows: 1,
-                ads: { tiktok: false, meta: false, google: false },
-                boosted: {
-                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    likes: 0, comments: 0, saves: 0, shares: 0
-                }
-            },
-            {
-                contentNumber: 'Content 653',
-                contentType: 'private',
-                hook: 'Ultimate guide to the Great Ocean Road',
-                postedDate: '2026-01-30',
-                views: { instagram: 1020, facebook: 410, tiktok: 1350, youtube: 780 },
-                retention: { instagram: 58, facebook: 46, tiktok: 54, youtube: 58 },
-                likes: 95, comments: 24, saves: 62, shares: 19, newFollows: 15,
-                ads: { tiktok: true, meta: true, google: true },
-                boosted: {
-                    views: { instagram: 2400, facebook: 1500, tiktok: 3200, youtube: 1200 },
-                    retention: { instagram: 55, facebook: 43, tiktok: 51, youtube: 56 },
-                    likes: 210, comments: 55, saves: 135, shares: 42
-                }
-            },
-            {
-                contentNumber: 'Content 654',
-                contentType: 'shared',
-                hook: 'Simple meal prep ideas for busy weekdays',
-                postedDate: '2026-01-29',
-                views: { instagram: 278, facebook: 102, tiktok: 355, youtube: 115 },
-                retention: { instagram: 38, facebook: 33, tiktok: 46, youtube: 40 },
-                likes: 22, comments: 7, saves: 19, shares: 4, newFollows: 2,
-                ads: { tiktok: false, meta: false, google: false },
-                boosted: {
-                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    likes: 0, comments: 0, saves: 0, shares: 0
-                }
-            },
-            {
-                contentNumber: 'Content 655',
-                contentType: 'private',
-                hook: 'Sunrise at Uluru: what they don\'t tell you',
-                postedDate: '2026-01-28',
-                views: { instagram: 678, facebook: 245, tiktok: 820, youtube: 420 },
-                retention: { instagram: 55, facebook: 44, tiktok: 52, youtube: 52 },
-                likes: 58, comments: 14, saves: 38, shares: 11, newFollows: 8,
-                ads: { tiktok: true, meta: false, google: false },
-                boosted: {
-                    views: { instagram: 678, facebook: 245, tiktok: 1950, youtube: 420 },
-                    retention: { instagram: 55, facebook: 44, tiktok: 49, youtube: 52 },
-                    likes: 58, comments: 14, saves: 38, shares: 11
-                }
-            },
-            {
                 contentNumber: 'Content 657',
                 contentType: 'shared',
-                hook: 'How to stay motivated when results are slow',
-                postedDate: '2026-01-27',
-                views: { instagram: 195, facebook: 72, tiktok: 228, youtube: 88 },
-                retention: { instagram: 24, facebook: 22, tiktok: 35, youtube: 28 },
-                likes: 9, comments: 3, saves: 5, shares: 1, newFollows: 0,
-                ads: { tiktok: false, meta: false, google: false },
-                boosted: {
-                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    likes: 0, comments: 0, saves: 0, shares: 0
-                }
-            },
-            {
-                contentNumber: 'Content 658',
-                contentType: 'private',
-                hook: 'Sydney Harbour Bridge climb: worth the price?',
-                postedDate: '2026-01-26',
-                views: { instagram: 445, facebook: 165, tiktok: 580, youtube: 255 },
-                retention: { instagram: 46, facebook: 38, tiktok: 48, youtube: 45 },
-                likes: 35, comments: 8, saves: 21, shares: 5, newFollows: 4,
-                ads: { tiktok: false, meta: false, google: false },
-                boosted: {
-                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    likes: 0, comments: 0, saves: 0, shares: 0
-                }
-            },
-            {
-                contentNumber: 'Content 659',
-                contentType: 'shared',
-                hook: 'The one thing that improved my sleep quality',
-                postedDate: '2026-01-25',
-                views: { instagram: 312, facebook: 118, tiktok: 390, youtube: 165 },
-                retention: { instagram: 42, facebook: 36, tiktok: 47, youtube: 42 },
-                likes: 26, comments: 6, saves: 16, shares: 4, newFollows: 3,
-                ads: { tiktok: false, meta: false, google: false },
-                boosted: {
-                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    likes: 0, comments: 0, saves: 0, shares: 0
-                }
-            },
-            {
-                contentNumber: 'Content 660',
-                contentType: 'private',
-                hook: 'Kangaroo Island in 48 hours: full itinerary',
-                postedDate: '2026-01-24',
-                views: { instagram: 534, facebook: 198, tiktok: 645, youtube: 310 },
-                retention: { instagram: 50, facebook: 41, tiktok: 49, youtube: 50 },
-                likes: 48, comments: 11, saves: 32, shares: 9, newFollows: 7,
-                ads: { tiktok: false, meta: true, google: false },
-                boosted: {
-                    views: { instagram: 534, facebook: 720, tiktok: 645, youtube: 310 },
-                    retention: { instagram: 50, facebook: 39, tiktok: 49, youtube: 50 },
-                    likes: 48, comments: 11, saves: 32, shares: 9
-                }
-            },
-            {
-                contentNumber: 'Content 662',
-                contentType: 'shared',
-                hook: 'Budget travel tips that actually work',
-                postedDate: '2026-01-23',
-                views: { instagram: 367, facebook: 142, tiktok: 478, youtube: 198 },
-                retention: { instagram: 44, facebook: 38, tiktok: 51, youtube: 44 },
-                likes: 31, comments: 8, saves: 24, shares: 6, newFollows: 4,
-                ads: { tiktok: false, meta: false, google: false },
-                boosted: {
-                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    likes: 0, comments: 0, saves: 0, shares: 0
-                }
-            },
-            {
-                contentNumber: 'Content 663',
-                contentType: 'private',
-                hook: 'Blue Mountains day trip: best lookouts and walks',
-                postedDate: '2026-01-22',
-                views: { instagram: 723, facebook: 278, tiktok: 890, youtube: 465 },
-                retention: { instagram: 54, facebook: 43, tiktok: 52, youtube: 52 },
-                likes: 62, comments: 15, saves: 41, shares: 12, newFollows: 9,
-                ads: { tiktok: true, meta: false, google: false },
-                boosted: {
-                    views: { instagram: 723, facebook: 278, tiktok: 2100, youtube: 465 },
-                    retention: { instagram: 54, facebook: 43, tiktok: 50, youtube: 52 },
-                    likes: 62, comments: 15, saves: 41, shares: 12
-                }
-            },
-            {
-                contentNumber: 'Content 664',
-                contentType: 'shared',
-                hook: 'Why rest days are just as important as workout days',
-                postedDate: '2026-01-21',
-                views: { instagram: 248, facebook: 92, tiktok: 302, youtube: 108 },
-                retention: { instagram: 32, facebook: 29, tiktok: 42, youtube: 35 },
-                likes: 17, comments: 4, saves: 9, shares: 2, newFollows: 1,
-                ads: { tiktok: false, meta: false, google: false },
-                boosted: {
-                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    likes: 0, comments: 0, saves: 0, shares: 0
-                }
-            },
-            {
-                contentNumber: 'Content 665',
-                contentType: 'private',
-                hook: 'Byron Bay: local secrets and hidden spots',
-                postedDate: '2026-01-20',
-                views: { instagram: 612, facebook: 228, tiktok: 755, youtube: 385 },
-                retention: { instagram: 51, facebook: 42, tiktok: 53, youtube: 49 },
-                likes: 52, comments: 13, saves: 35, shares: 10, newFollows: 6,
+                hook: "Staying at this Sydney hostel means no $40 brunch on bills",
+                postedDate: '2026-02-17',
+                views: { instagram: 174, facebook: 151, tiktok: 295, youtube: 107 },
+                retention: { instagram: 19, facebook: 25, tiktok: 45, youtube: 30 },
+                likes: 3, comments: 0, saves: 0, shares: 0, newFollows: 0,
                 ads: { tiktok: false, meta: false, google: false },
                 boosted: {
                     views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
@@ -601,12 +801,12 @@
 
         // Calculate performance
         function calculatePerformance(item) {
-            const avgRetention = (item.retention.instagram + item.retention.facebook + 
-                                 item.retention.tiktok + item.retention.youtube) / 4;
-            const totalViews = item.views.instagram + item.views.facebook + 
-                              item.views.tiktok + item.views.youtube;
+            const avgRetention = (item.retention.instagram + item.retention.facebook +
+                item.retention.tiktok + item.retention.youtube) / 4;
+            const totalViews = item.views.instagram + item.views.facebook +
+                item.views.tiktok + item.views.youtube;
             const engagementRate = ((item.likes + item.comments + item.saves + item.shares) / totalViews) * 100;
-            
+
             if (avgRetention > 40 || engagementRate > 5) return 'high';
             if (avgRetention < 25 && engagementRate < 2) return 'low';
             return 'average';
@@ -614,131 +814,145 @@
 
         // Render content calendar
         function renderContentCalendar() {
-            const tbody = document.getElementById('content-table-body');
-            const typeFilter = document.getElementById('type-filter').value;
-            const perfFilter = document.getElementById('perf-filter').value;
-            
-            const filtered = contentData.filter(item => {
-                if (typeFilter !== 'all' && item.contentType !== typeFilter) return false;
-                if (perfFilter !== 'all' && calculatePerformance(item) !== perfFilter) return false;
-                return true;
-            });
+            var tbody = document.getElementById('content-table-body');
+            var typeFilter = document.getElementById('type-filter').value;
+            var perfFilter = document.getElementById('perf-filter').value;
 
-            tbody.innerHTML = filtered.map(item => {
-                const totalViews = item.views.instagram + item.views.facebook + 
-                                  item.views.tiktok + item.views.youtube;
-                const avgRetention = ((item.retention.instagram + item.retention.facebook + 
-                                      item.retention.tiktok + item.retention.youtube) / 4).toFixed(1);
-                const performance = calculatePerformance(item);
+            // Use live API data when available
+            if (liveContent && liveContent.length > 0) {
+                var crossPlatform = liveContent.filter(function (item) {
+                    return (item.views.ig || 0) > 0 || (item.views.fb || 0) > 0 || (item.views.tt || 0) > 0;
+                }).slice(0, 20);
+                var liveFiltered = crossPlatform.filter(function (item) {
+                    if (perfFilter !== 'all' && liveItemPerformance(item) !== perfFilter) return false;
+                    return true;
+                });
+                tbody.innerHTML = liveFiltered.map(function (item, idx) {
+                    var dateStr = item.postedDate ? new Date(item.postedDate).toLocaleDateString() : '—';
+                    var perf = liveItemPerformance(item);
+                    var totalViews = (item.views.ig || 0) + (item.views.fb || 0) + (item.views.tt || 0) + (item.views.yt || 0);
+                    var hook = escapeHtml(item.hook || '');
+                    var hasMultiple = [item.views.ig, item.views.fb, item.views.tt, item.views.yt].filter(function (v) { return v > 0; }).length > 1;
+                    var contentType = hasMultiple ? 'shared' : 'video';
+                    return '<tr>' +
+                        '<td>Content ' + (idx + 1) + '</td>' +
+                        '<td><span class="type-badge type-' + contentType + '">' + contentType + '</span></td>' +
+                        '<td>' + (hook || '—') + '</td>' +
+                        '<td>' + dateStr + '</td>' +
+                        '<td><span class="performance-badge badge-' + perf + '">' + perf + '</span></td>' +
+                        '<td><strong>' + Number(totalViews).toLocaleString() + '</strong></td>' +
+                        '<td>' +
+                        '<div><span class="platform-icon ig">IG</span>' + Number(item.views.ig || 0).toLocaleString() + '</div>' +
+                        '<div><span class="platform-icon fb">FB</span>' + Number(item.views.fb || 0).toLocaleString() + '</div>' +
+                        '<div><span class="platform-icon tt">TT</span>' + Number(item.views.tt || 0).toLocaleString() + '</div>' +
+                        '<div><span class="platform-icon yt">YT</span>' + Number(item.views.yt || 0).toLocaleString() + '</div>' +
+                        '</td>' +
+                        '<td>' + (totalViews > 0 ? ((((item.likes || 0) + (item.comments || 0) + (item.saves || 0) + (item.shares || 0)) / totalViews) * 100).toFixed(2) + '%' : '—') + '</td>' +
+                        '<td>' +
+                        '<div>❤️ ' + Number(item.likes || 0) + '</div>' +
+                        '<div>💬 ' + Number(item.comments || 0) + '</div>' +
+                        '<div>🔖 ' + Number(item.saves || 0) + '</div>' +
+                        '<div>🔄 ' + Number(item.shares || 0) + '</div>' +
+                        '</td>' +
+                        '</tr>';
+                }).join('');
+                return;
+            }
 
-                return `
-                    <tr>
-                        <td>${item.contentNumber}</td>
-                        <td><span class="type-badge type-${item.contentType}">${item.contentType}</span></td>
-                        <td>${item.hook}</td>
-                        <td>${new Date(item.postedDate).toLocaleDateString()}</td>
-                        <td><span class="performance-badge badge-${performance}">${performance}</span></td>
-                        <td><strong>${totalViews.toLocaleString()}</strong></td>
-                        <td>
-                            <div><span class="platform-icon ig">IG</span>${item.views.instagram}</div>
-                            <div><span class="platform-icon fb">FB</span>${item.views.facebook}</div>
-                            <div><span class="platform-icon tt">TT</span>${item.views.tiktok}</div>
-                            <div><span class="platform-icon yt">YT</span>${item.views.youtube}</div>
-                        </td>
-                        <td>${avgRetention}%</td>
-                        <td>
-                            <div>❤️ ${item.likes}</div>
-                            <div>💬 ${item.comments}</div>
-                            <div>🔖 ${item.saves}</div>
-                            <div>🔄 ${item.shares}</div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
+            // Show loading placeholder while APIs are fetching
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:3rem;color:#718096;">Loading live data from APIs…</td></tr>';
         }
 
         // Render organic vs paid
         function renderOrganicVsPaid() {
-            const grid = document.getElementById('comparison-grid');
-            const boosted = contentData.filter(item => item.ads.tiktok || item.ads.meta || item.ads.google);
+            var grid = document.getElementById('comparison-grid');
 
-            if (boosted.length === 0) {
-                grid.innerHTML = '<div style="text-align:center; padding:4rem; color:#718096;"><p>No boosted content found.</p></div>';
+            // Use live data if available (same source as Content Calendar)
+            var source = [];
+            if (liveContent && liveContent.length > 0) {
+                source = liveContent.filter(function (item) {
+                    return (item.views.ig || 0) > 0 || (item.views.fb || 0) > 0 || (item.views.tt || 0) > 0;
+                }).slice(0, 20);
+            }
+
+            if (source.length === 0) {
+                grid.innerHTML = '<div style="text-align:center; padding:4rem; color:#718096;"><p>' +
+                    (liveContent.length === 0 ? 'Loading live data… please wait.' : 'No cross-platform content found.') +
+                    '</p></div>';
                 return;
             }
 
-            grid.innerHTML = boosted.map(item => {
-                const calculateLift = (organic, boosted) => {
-                    if (organic === 0) return 0;
-                    return (((boosted - organic) / organic) * 100).toFixed(1);
-                };
+            grid.innerHTML = source.map(function (item, idx) {
+                var hook = escapeHtml(item.hook || '');
+                var dateStr = item.postedDate ? new Date(item.postedDate).toLocaleDateString() : '—';
+                var ig = item.views.ig || 0;
+                var fb = item.views.fb || 0;
+                var tt = item.views.tt || 0;
+                var yt = item.views.yt || 0;
+                var totalViews = ig + fb + tt + yt;
 
-                return `
-                    <div class="comparison-card">
-                        <div class="card-header">
-                            <h3>${item.contentNumber}</h3>
-                            <p>${item.hook}</p>
-                            <div>
-                                ${item.ads.tiktok ? '<span class="platform-tag">TikTok Ads</span>' : ''}
-                                ${item.ads.meta ? '<span class="platform-tag">Meta Ads</span>' : ''}
-                                ${item.ads.google ? '<span class="platform-tag">Google Ads</span>' : ''}
-                            </div>
-                        </div>
-                        
-                        <div style="padding: 1.5rem;">
-                            <h4 style="margin-bottom: 1rem;">Views Comparison</h4>
-                            <div class="comparison-row">
-                                <div class="metric-column organic">
-                                    <span class="label">Organic</span>
-                                    <div>IG: ${item.views.instagram.toLocaleString()}</div>
-                                    <div>FB: ${item.views.facebook.toLocaleString()}</div>
-                                    <div>TT: ${item.views.tiktok.toLocaleString()}</div>
-                                    <div>YT: ${item.views.youtube.toLocaleString()}</div>
-                                </div>
-                                <div class="metric-column boosted">
-                                    <span class="label">Boosted</span>
-                                    <div>IG: ${item.boosted.views.instagram.toLocaleString()} <span class="lift">+${calculateLift(item.views.instagram, item.boosted.views.instagram)}%</span></div>
-                                    <div>FB: ${item.boosted.views.facebook.toLocaleString()} <span class="lift">+${calculateLift(item.views.facebook, item.boosted.views.facebook)}%</span></div>
-                                    <div>TT: ${item.boosted.views.tiktok.toLocaleString()} <span class="lift">+${calculateLift(item.views.tiktok, item.boosted.views.tiktok)}%</span></div>
-                                    <div>YT: ${item.boosted.views.youtube.toLocaleString()}</div>
-                                </div>
-                            </div>
+                // Find best platform
+                var platforms = [{ name: 'IG', val: ig }, { name: 'FB', val: fb }, { name: 'TT', val: tt }, { name: 'YT', val: yt }];
+                var best = platforms.reduce(function (a, b) { return b.val > a.val ? b : a; }, platforms[0]);
 
-                            <h4 style="margin: 2rem 0 1rem;">Engagement Comparison</h4>
-                            <div class="comparison-row">
-                                <div class="metric-column organic">
-                                    <span class="label">Organic</span>
-                                    <div>❤️ ${item.likes}</div>
-                                    <div>💬 ${item.comments}</div>
-                                    <div>🔖 ${item.saves}</div>
-                                    <div>🔄 ${item.shares}</div>
-                                </div>
-                                <div class="metric-column boosted">
-                                    <span class="label">Boosted</span>
-                                    <div>❤️ ${item.boosted.likes} <span class="lift">+${calculateLift(item.likes, item.boosted.likes)}%</span></div>
-                                    <div>💬 ${item.boosted.comments} <span class="lift">+${calculateLift(item.comments, item.boosted.comments)}%</span></div>
-                                    <div>🔖 ${item.boosted.saves} <span class="lift">+${calculateLift(item.saves, item.boosted.saves)}%</span></div>
-                                    <div>🔄 ${item.boosted.shares} <span class="lift">+${calculateLift(item.shares, item.boosted.shares)}%</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                // View share % per platform
+                function pct(v) { return totalViews > 0 ? ((v / totalViews) * 100).toFixed(1) : '0.0'; }
+
+                var totalEng = (item.likes || 0) + (item.comments || 0) + (item.saves || 0) + (item.shares || 0);
+                var engRate = totalViews > 0 ? ((totalEng / totalViews) * 100).toFixed(2) : '0.00';
+
+                return '<div class="comparison-card">' +
+                    '<div class="card-header">' +
+                    '<h3>Content ' + (idx + 1) + '</h3>' +
+                    '<p>' + (hook || '—') + '</p>' +
+                    '<div style="font-size:0.8rem;color:#718096;margin-top:0.25rem;">' + dateStr + '</div>' +
+                    '<div style="margin-top:0.5rem;">' +
+                    '<span class="platform-tag" style="background:#e53e3e;">Best: ' + best.name + ' (' + Number(best.val).toLocaleString() + ' views)</span>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div style="padding:1.5rem;">' +
+                    '<h4 style="margin-bottom:1rem;">Platform Views Breakdown</h4>' +
+                    '<div class="comparison-row">' +
+                    '<div class="metric-column organic">' +
+                    '<span class="label">Views</span>' +
+                    '<div><span class="platform-icon ig">IG</span> ' + Number(ig).toLocaleString() + ' <span style="color:#718096;font-size:0.8rem;">(' + pct(ig) + '%)</span></div>' +
+                    '<div><span class="platform-icon fb">FB</span> ' + Number(fb).toLocaleString() + ' <span style="color:#718096;font-size:0.8rem;">(' + pct(fb) + '%)</span></div>' +
+                    '<div><span class="platform-icon tt">TT</span> ' + Number(tt).toLocaleString() + ' <span style="color:#718096;font-size:0.8rem;">(' + pct(tt) + '%)</span></div>' +
+                    '<div><span class="platform-icon yt">YT</span> ' + Number(yt).toLocaleString() + ' <span style="color:#718096;font-size:0.8rem;">(' + pct(yt) + '%)</span></div>' +
+                    '<div style="margin-top:0.5rem;font-weight:600;">Total: ' + Number(totalViews).toLocaleString() + '</div>' +
+                    '</div>' +
+                    '<div class="metric-column boosted">' +
+                    '<span class="label">Engagement</span>' +
+                    '<div>❤️ ' + Number(item.likes || 0) + '</div>' +
+                    '<div>💬 ' + Number(item.comments || 0) + '</div>' +
+                    '<div>🔖 ' + Number(item.saves || 0) + '</div>' +
+                    '<div>🔄 ' + Number(item.shares || 0) + '</div>' +
+                    '<div style="margin-top:0.5rem;font-weight:600;">Rate: ' + engRate + '%</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
             }).join('');
         }
+
 
         // Tab switching
         function showTab(tab) {
             const tabs = document.querySelectorAll('.tab');
             tabs.forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
+            if (event && event.target) event.target.classList.add('active');
+            else {
+                const idx = tab === 'calendar' ? 0 : 1;
+                if (tabs[idx]) tabs[idx].classList.add('active');
+            }
+
+            document.getElementById('calendar-tab').classList.add('hidden');
+            document.getElementById('organic-tab').classList.add('hidden');
 
             if (tab === 'calendar') {
                 document.getElementById('calendar-tab').classList.remove('hidden');
-                document.getElementById('organic-tab').classList.add('hidden');
                 renderContentCalendar();
             } else {
-                document.getElementById('calendar-tab').classList.add('hidden');
                 document.getElementById('organic-tab').classList.remove('hidden');
                 renderOrganicVsPaid();
             }
@@ -749,8 +963,12 @@
             renderContentCalendar();
         }
 
-        // Initialize
-        renderContentCalendar();
+        // Initialize: show loading state then auto-fetch live data
+        (function init() {
+            renderContentCalendar();
+            fetchAllLiveData();
+        })();
     </script>
 </body>
+
 </html>
