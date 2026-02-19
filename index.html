@@ -1,974 +1,970 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content Performance Dashboard</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Content Performance Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f7fafc;
-            color: #1a202c;
-        }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f7fafc;
+      color: #1a202c;
+    }
 
-        .app-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem;
-        }
+    .app-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+    }
 
-        .app-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
+    .app-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
 
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-        }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
 
-        .tab {
-            background: transparent;
-            border: none;
-            color: rgba(255, 255, 255, 0.7);
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: all 0.2s;
-        }
+    .tab {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
 
-        .tab:hover {
-            color: white;
-            background: rgba(255, 255, 255, 0.1);
-        }
+    .tab:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.1);
+    }
 
-        .tab.active {
-            color: white;
-            border-bottom-color: white;
-            background: rgba(255, 255, 255, 0.15);
-        }
+    .tab.active {
+      color: white;
+      border-bottom-color: white;
+      background: rgba(255, 255, 255, 0.15);
+    }
 
-        .app-main {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-        }
+    .app-main {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
 
-        .content-calendar,
-        .organic-vs-paid {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
+    .content-calendar,
+    .organic-vs-paid {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
 
-        .filters-section {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
+    .filters-section {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
 
-        .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
 
-        .filter-group label {
-            font-weight: 600;
-            color: #718096;
-        }
+    .filter-group label {
+      font-weight: 600;
+      color: #718096;
+    }
 
-        .filter-group select {
-            padding: 0.5rem 1rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+    .filter-group select {
+      padding: 0.5rem 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      cursor: pointer;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
 
-        th {
-            background: #f8f9fa;
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            color: #718096;
-            border-bottom: 2px solid #e2e8f0;
-            cursor: pointer;
-        }
+    th {
+      background: #f8f9fa;
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: #718096;
+      border-bottom: 2px solid #e2e8f0;
+      cursor: pointer;
+    }
 
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid #e2e8f0;
-        }
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
 
-        tr:hover {
-            background: #f8f9fa;
-        }
+    tr:hover {
+      background: #f8f9fa;
+    }
 
-        .type-badge,
-        .performance-badge {
-            display: inline-block;
-            padding: 0.35rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
+    .type-badge,
+    .performance-badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
 
-        .type-private {
-            background: #e6f4ff;
-            color: #0066cc;
-        }
+    .type-private {
+      background: #e6f4ff;
+      color: #0066cc;
+    }
 
-        .type-shared {
-            background: #fff0e6;
-            color: #d46b08;
-        }
+    .type-shared {
+      background: #fff0e6;
+      color: #d46b08;
+    }
 
-        .type-video {
-            background: #fce7f3;
-            color: #be185d;
-        }
+    .type-video {
+      background: #fce7f3;
+      color: #be185d;
+    }
 
-        .badge-high {
-            background: #d4edda;
-            color: #155724;
-        }
+    .badge-high {
+      background: #d4edda;
+      color: #155724;
+    }
 
-        .badge-average {
-            background: #fff3cd;
-            color: #856404;
-        }
+    .badge-average {
+      background: #fff3cd;
+      color: #856404;
+    }
 
-        .badge-low {
-            background: #f8d7da;
-            color: #721c24;
-        }
+    .badge-low {
+      background: #f8d7da;
+      color: #721c24;
+    }
 
-        .platform-icon {
-            display: inline-block;
-            width: 28px;
-            height: 28px;
-            line-height: 28px;
-            text-align: center;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: white;
-            margin-right: 0.5rem;
-        }
+    .platform-icon {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+      text-align: center;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: white;
+      margin-right: 0.5rem;
+    }
 
-        .ig {
-            background: linear-gradient(45deg, #f09433, #dc2743);
-        }
+    .ig {
+      background: linear-gradient(45deg, #f09433, #dc2743);
+    }
 
-        .fb {
-            background: #1877f2;
-        }
+    .fb {
+      background: #1877f2;
+    }
 
-        .tt {
-            background: #000000;
-        }
+    .tt {
+      background: #000000;
+    }
 
-        .yt {
-            background: #ff0000;
-        }
+    .yt {
+      background: #ff0000;
+    }
 
-        .comparison-grid {
-            padding: 2rem;
-            display: grid;
-            gap: 2rem;
-        }
+    .comparison-grid {
+      padding: 2rem;
+      display: grid;
+      gap: 2rem;
+    }
 
-        .comparison-card {
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            overflow: hidden;
-        }
+    .comparison-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
 
-        .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1.5rem;
-        }
+    .card-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.5rem;
+    }
 
-        .card-header h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-        }
+    .card-header h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
 
-        .platform-tag {
-            display: inline-block;
-            padding: 0.4rem 0.8rem;
-            margin: 0.5rem 0.5rem 0 0;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
+    .platform-tag {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      margin: 0.5rem 0.5rem 0 0;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
 
-        .comparison-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1px;
-            background: #e2e8f0;
-            margin: 1rem 0;
-        }
+    .comparison-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: #e2e8f0;
+      margin: 1rem 0;
+    }
 
-        .metric-column {
-            background: white;
-            padding: 1.5rem;
-        }
+    .metric-column {
+      background: white;
+      padding: 1.5rem;
+    }
 
-        .label {
-            display: block;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            margin-bottom: 1rem;
-            color: #718096;
-        }
+    .label {
+      display: block;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      color: #718096;
+    }
 
-        .organic .label {
-            color: #0066cc;
-        }
+    .organic .label {
+      color: #0066cc;
+    }
 
-        .boosted .label {
-            color: #d46b08;
-        }
+    .boosted .label {
+      color: #d46b08;
+    }
 
-        .lift {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            margin-left: 0.5rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            background: #d4edda;
-            color: #155724;
-        }
+    .lift {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      margin-left: 0.5rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: #d4edda;
+      color: #155724;
+    }
 
-        .hidden {
-            display: none;
-        }
+    .hidden {
+      display: none;
+    }
 
-        .api-key-section {
-            background: #f8f9fa;
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
+    .api-key-section {
+      background: #f8f9fa;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
 
-        .api-key-section label {
-            font-weight: 600;
-            color: #718096;
-        }
+    .api-key-section label {
+      font-weight: 600;
+      color: #718096;
+    }
 
-        .api-key-section input {
-            padding: 0.5rem 0.75rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            min-width: 280px;
-        }
+    .api-key-section input {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      min-width: 280px;
+    }
 
-        .api-key-section button {
-            padding: 0.5rem 1rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-        }
+    .api-key-section button {
+      padding: 0.5rem 1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
 
-        .api-key-section button:hover {
-            opacity: 0.9;
-        }
+    .api-key-section button:hover {
+      opacity: 0.9;
+    }
 
-        .youtube-tab .api-key-section .status {
-            font-size: 0.9rem;
-            color: #718096;
-        }
+    .youtube-tab .api-key-section .status {
+      font-size: 0.9rem;
+      color: #718096;
+    }
 
-        .youtube-tab .yt-refresh-btn {
-            padding: 0.5rem 1rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-        }
+    .youtube-tab .yt-refresh-btn {
+      padding: 0.5rem 1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
 
-        .youtube-tab .yt-refresh-btn:hover {
-            opacity: 0.9;
-        }
+    .youtube-tab .yt-refresh-btn:hover {
+      opacity: 0.9;
+    }
 
-        .youtube-tab table {
-            margin: 0;
-        }
+    .youtube-tab table {
+      margin: 0;
+    }
 
-        .yt-loading,
-        .yt-error {
-            padding: 2rem;
-            text-align: center;
-            color: #718096;
-        }
+    .yt-loading,
+    .yt-error {
+      padding: 2rem;
+      text-align: center;
+      color: #718096;
+    }
 
-        .yt-error {
-            color: #721c24;
-        }
+    .yt-error {
+      color: #721c24;
+    }
 
-        @media (max-width: 768px) {
-            .comparison-row {
-                grid-template-columns: 1fr;
-            }
+    @media (max-width: 768px) {
+      .comparison-row {
+        grid-template-columns: 1fr;
+      }
 
-            .app-main {
-                padding: 0 1rem;
-            }
-        }
-    </style>
+      .app-main {
+        padding: 0 1rem;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <div class="app-header">
-        <h1 class="app-title">Content Performance Dashboard</h1>
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('calendar')">Content Calendar</button>
-            <button class="tab" onclick="showTab('organic')">Organic vs Paid</button>
+  <div class="app-header">
+    <h1 class="app-title">Content Performance Dashboard</h1>
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('calendar')">
+        Content Calendar
+      </button>
+      <button class="tab" onclick="showTab('organic')">
+        Organic vs Paid
+      </button>
+    </div>
+  </div>
+
+  <div class="app-main">
+    <!-- Content Calendar Tab -->
+    <div id="calendar-tab" class="content-calendar">
+      <div class="filters-section">
+        <div class="filter-group">
+          <label>Content Type:</label>
+          <select id="type-filter" aria-label="Content type filter" onchange="filterContent()">
+            <option value="all">All</option>
+            <option value="private">Private</option>
+            <option value="shared">Shared</option>
+          </select>
         </div>
+        <div class="filter-group">
+          <label>Performance:</label>
+          <select id="perf-filter" aria-label="Performance filter" onchange="filterContent()">
+            <option value="all">All</option>
+            <option value="high">High</option>
+            <option value="average">Average</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="overflow-x: auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Content #</th>
+              <th>Type</th>
+              <th>Hook</th>
+              <th>Posted Date</th>
+              <th>Performance</th>
+              <th>Total Views</th>
+              <th>Platform Views</th>
+              <th>Eng. Rate</th>
+              <th>Engagement</th>
+            </tr>
+          </thead>
+          <tbody id="content-table-body">
+            <!-- Content will be inserted here by JavaScript -->
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <div class="app-main">
-        <!-- Content Calendar Tab -->
-        <div id="calendar-tab" class="content-calendar">
-            <div class="filters-section">
-                <div class="filter-group">
-                    <label>Content Type:</label>
-                    <select id="type-filter" aria-label="Content type filter" onchange="filterContent()">
-                        <option value="all">All</option>
-                        <option value="private">Private</option>
-                        <option value="shared">Shared</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Performance:</label>
-                    <select id="perf-filter" aria-label="Performance filter" onchange="filterContent()">
-                        <option value="all">All</option>
-                        <option value="high">High</option>
-                        <option value="average">Average</option>
-                        <option value="low">Low</option>
-                    </select>
-                </div>
-            </div>
-
-            <div style="overflow-x: auto;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Content #</th>
-                            <th>Type</th>
-                            <th>Hook</th>
-                            <th>Posted Date</th>
-                            <th>Performance</th>
-                            <th>Total Views</th>
-                            <th>Platform Views</th>
-                            <th>Eng. Rate</th>
-                            <th>Engagement</th>
-                        </tr>
-                    </thead>
-                    <tbody id="content-table-body">
-                        <!-- Content will be inserted here by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Organic vs Paid Tab -->
-        <div id="organic-tab" class="organic-vs-paid hidden">
-            <div class="comparison-grid" id="comparison-grid">
-                <!-- Comparison cards will be inserted here by JavaScript -->
-            </div>
-        </div>
-
+    <!-- Organic vs Paid Tab -->
+    <div id="organic-tab" class="organic-vs-paid hidden">
+      <div class="comparison-grid" id="comparison-grid">
+        <!-- Comparison cards will be inserted here by JavaScript -->
+      </div>
     </div>
+  </div>
 
-    <script>
-        // YouTube Data API – paste your key in index.html here (no frontend input)
-        const YOUTUBE_CHANNEL_USERNAME = 'AzzurroPodHotels';
-        const YOUTUBE_API_KEY = 'AIzaSyAY_jyp31H9jT5jgQkM2DcTKdayuHeygbY'; // Paste your YouTube Data API v3 key here
-        // Apify dataset URLs for Instagram, Facebook, TikTok (paste your dataset URLs here)
-        const APIFY_INSTAGRAM_URL = 'https://api.apify.com/v2/datasets/jG6jwmOcAaItbN3E7/items?token=apify_api_36Cw17e9xBqjASJE1GRVYwHiRPAR1P2mafom';
-        const APIFY_FACEBOOK_URL = 'https://api.apify.com/v2/datasets/5Qce7KgukXmcAPw2T/items?token=apify_api_36Cw17e9xBqjASJE1GRVYwHiRPAR1P2mafom';
-        const APIFY_TIKTOK_URL = 'https://api.apify.com/v2/datasets/vCdkByYjOkDckGfp9/items?token=apify_api_36Cw17e9xBqjASJE1GRVYwHiRPAR1P2mafom';
-        let youtubeVideos = [];
-        let instagramPosts = [];
-        let facebookPosts = [];
-        let tiktokPosts = [];
-        let liveContent = [];
+  <script>
+    // ─── STATE ───────────────────────────────────────────────────────────────
+    // liveContent holds the merged data returned by the server (/api/all).
+    // It starts empty and is filled once the backend responds.
+    let liveContent = [];
 
-        function setYoutubeStatus(msg, isError) {
-            var el = document.getElementById('youtube-status');
-            if (el) { el.textContent = msg; el.style.color = isError ? '#721c24' : '#718096'; }
-        }
+    // ─── STATUS DISPLAY ──────────────────────────────────────────────────────
+    // Shows a status message in the UI (e.g. "Loading…" or error text).
+    function setYoutubeStatus(msg, isError) {
+      var el = document.getElementById("youtube-status");
+      if (el) {
+        el.textContent = msg;
+        el.style.color = isError ? "#721c24" : "#718096";
+      }
+    }
 
-        function buildLiveContent() {
-            // Helper: extract YYYY-MM-DD date key from a date string
-            function dateKey(s) {
-                if (!s) return null;
-                var d = new Date(s);
-                if (isNaN(d.getTime())) return null;
-                return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-            }
+    // ─── PERFORMANCE RATING ───────────────────────────────────────────────────
+    // Calculates whether a piece of content is "high", "average", or "low"
+    // based on total views and engagement rate across all platforms.
+    function liveItemPerformance(item) {
+      var total =
+        (item.views.ig || 0) +
+        (item.views.fb || 0) +
+        (item.views.tt || 0) +
+        (item.views.yt || 0);
+      var engagement =
+        (item.likes || 0) +
+        (item.comments || 0) +
+        (item.saves || 0) +
+        (item.shares || 0);
+      var rate = total > 0 ? (engagement / total) * 100 : 0;
+      if (rate > 5 || total > 10000) return "high";
+      if (rate < 1 && total < 1000) return "low";
+      return "average";
+    }
 
-            // Build a map: dateKey -> { yt: [], ig: [], fb: [], tt: [] }
-            var byDate = {};
-
-            youtubeVideos.forEach(function (v) {
-                var k = dateKey(v.publishedAt);
-                if (!k) return;
-                if (!byDate[k]) byDate[k] = { yt: [], ig: [], fb: [], tt: [] };
-                byDate[k].yt.push(v);
-            });
-            instagramPosts.forEach(function (p) {
-                var k = dateKey(p.postedDate);
-                if (!k) return;
-                if (!byDate[k]) byDate[k] = { yt: [], ig: [], fb: [], tt: [] };
-                byDate[k].ig.push(p);
-            });
-            facebookPosts.forEach(function (p) {
-                var k = dateKey(p.postedDate);
-                if (!k) return;
-                if (!byDate[k]) byDate[k] = { yt: [], ig: [], fb: [], tt: [] };
-                byDate[k].fb.push(p);
-            });
-            tiktokPosts.forEach(function (p) {
-                var k = dateKey(p.postedDate);
-                if (!k) return;
-                if (!byDate[k]) byDate[k] = { yt: [], ig: [], fb: [], tt: [] };
-                byDate[k].tt.push(p);
-            });
-
-            // For each date, produce one row per YouTube video (or one row if no YT)
-            // IG/FB/TT posts on the same day are distributed by index; extras get their own rows
-            var list = [];
-            var sortedDates = Object.keys(byDate).sort(function (a, b) { return b.localeCompare(a); });
-
-            sortedDates.forEach(function (k) {
-                var day = byDate[k];
-                var numRows = Math.max(day.yt.length, day.ig.length, day.fb.length, day.tt.length, 1);
-
-                for (var i = 0; i < numRows; i++) {
-                    var y = day.yt[i] || null;
-                    var insta = day.ig[i] || null;
-                    var face = day.fb[i] || null;
-                    var tik = day.tt[i] || null;
-
-                    var viewsYt = y ? (parseInt(y.viewCount, 10) || 0) : 0;
-                    var viewsIg = insta ? (insta.views || 0) : 0;
-                    var viewsFb = face ? (face.views || 0) : 0;
-                    var viewsTt = tik ? (tik.views || 0) : 0;
-
-                    var likes = (y ? parseInt(y.likeCount, 10) || 0 : 0)
-                        + (insta ? insta.likes || 0 : 0)
-                        + (face ? face.likes || 0 : 0)
-                        + (tik ? tik.likes || 0 : 0);
-                    var comments = (y ? parseInt(y.commentCount, 10) || 0 : 0)
-                        + (insta ? insta.comments || 0 : 0)
-                        + (face ? face.comments || 0 : 0)
-                        + (tik ? tik.comments || 0 : 0);
-                    var saves = (insta ? insta.saves || 0 : 0) + (tik ? tik.saves || 0 : 0);
-                    var shares = (face ? face.shares || 0 : 0) + (tik ? tik.shares || 0 : 0);
-
-                    var hook = (y && y.title) || (insta && insta.hook) || (face && face.hook) || (tik && tik.hook) || 'Content';
-                    var postedDate = (y && y.publishedAt) || (insta && insta.postedDate) || (face && face.postedDate) || (tik && tik.postedDate) || k;
-                    var url = (y && ('https://www.youtube.com/watch?v=' + (y.videoId || ''))) || (insta && insta.url) || (face && face.url) || (tik && tik.url) || '#';
-
-                    list.push({
-                        postedDate: postedDate,
-                        hook: hook,
-                        url: url,
-                        views: { ig: viewsIg, fb: viewsFb, tt: viewsTt, yt: viewsYt },
-                        likes: likes,
-                        comments: comments,
-                        saves: saves,
-                        shares: shares
-                    });
-                }
-            });
-
-            liveContent = list;
-        }
-
-        function liveItemPerformance(item) {
-            var total = (item.views.ig || 0) + (item.views.fb || 0) + (item.views.tt || 0) + (item.views.yt || 0);
-            var engagement = (item.likes || 0) + (item.comments || 0) + (item.saves || 0) + (item.shares || 0);
-            var rate = total > 0 ? (engagement / total) * 100 : 0;
-            if (rate > 5 || total > 10000) return 'high';
-            if (rate < 1 && total < 1000) return 'low';
-            return 'average';
-        }
-
-        async function fetchInstagramData() {
-            if (!APIFY_INSTAGRAM_URL) return;
-            try {
-                var res = await fetch(APIFY_INSTAGRAM_URL);
-                var data = await res.json();
-                if (!Array.isArray(data)) return;
-                instagramPosts = data.map(function (p) {
-                    var caption = (p.caption || '').trim();
-                    var hook = caption.length > 80 ? caption.substring(0, 77) + '...' : caption;
-                    var views = parseInt(p.videoViewCount, 10) || parseInt(p.videoPlayCount, 10) || 0;
-                    return {
-                        hook: hook,
-                        postedDate: p.timestamp || '',
-                        url: p.url || '',
-                        views: views,
-                        likes: parseInt(p.likesCount, 10) || 0,
-                        comments: parseInt(p.commentsCount, 10) || 0,
-                        saves: 0,
-                        shares: 0
-                    };
-                });
-            } catch (e) { instagramPosts = []; }
-        }
-
-        async function fetchFacebookData() {
-            if (!APIFY_FACEBOOK_URL) return;
-            try {
-                var res = await fetch(APIFY_FACEBOOK_URL);
-                var data = await res.json();
-                if (!Array.isArray(data)) return;
-                facebookPosts = data.filter(function (p) { return p.isVideo; }).map(function (p) {
-                    var text = (p.text || '').trim();
-                    var hook = text.length > 80 ? text.substring(0, 77) + '...' : text;
-                    return {
-                        hook: hook,
-                        postedDate: p.time || '',
-                        url: p.url || p.topLevelUrl || '',
-                        views: parseInt(p.viewsCount, 10) || 0,
-                        likes: parseInt(p.likes, 10) || 0,
-                        comments: 0,
-                        shares: parseInt(p.shares, 10) || 0
-                    };
-                });
-            } catch (e) { facebookPosts = []; }
-        }
-
-        async function fetchTiktokData() {
-            if (!APIFY_TIKTOK_URL) return;
-            try {
-                var res = await fetch(APIFY_TIKTOK_URL);
-                var data = await res.json();
-                if (!Array.isArray(data)) return;
-                tiktokPosts = data.map(function (p) {
-                    var text = (p.text || '').trim();
-                    var hook = text.length > 80 ? text.substring(0, 77) + '...' : text;
-                    return {
-                        hook: hook,
-                        postedDate: p.createTimeISO || '',
-                        url: p.webVideoUrl || '',
-                        views: parseInt(p.playCount, 10) || 0,
-                        likes: parseInt(p.diggCount, 10) || 0,
-                        comments: parseInt(p.commentCount, 10) || 0,
-                        saves: parseInt(p.collectCount, 10) || 0,
-                        shares: parseInt(p.shareCount, 10) || 0
-                    };
-                });
-            } catch (e) { tiktokPosts = []; }
-        }
-
-        async function fetchAllLiveData() {
-            setYoutubeStatus('Loading all platforms…');
-            try {
-                await Promise.all([
-                    fetchYouTubeData(true),
-                    fetchInstagramData(),
-                    fetchFacebookData(),
-                    fetchTiktokData()
-                ]);
-                buildLiveContent();
-                renderContentCalendar();
-                setYoutubeStatus('YT: ' + youtubeVideos.length + ', IG: ' + instagramPosts.length + ', FB: ' + facebookPosts.length + ', TT: ' + tiktokPosts.length);
-            } catch (e) {
-                setYoutubeStatus('Error: ' + (e && e.message ? e.message : 'Failed'), true);
-            }
-        }
-
-        async function fetchYouTubeData(skipUi) {
-            if (!YOUTUBE_API_KEY) {
-                setYoutubeStatus('Set YOUTUBE_API_KEY in index.html (script, near top).', true);
-                return;
-            }
-            try {
-                var uploadsId = null;
-                var channelRes = await fetch('https://www.googleapis.com/youtube/v3/channels?part=contentDetails,snippet&forUsername=' + encodeURIComponent(YOUTUBE_CHANNEL_USERNAME) + '&key=' + encodeURIComponent(YOUTUBE_API_KEY));
-                var channelJson = await channelRes.json();
-                if (channelJson.error) throw new Error(channelJson.error.message || 'Channel request failed');
-                var items = channelJson.items || [];
-                if (items.length > 0) {
-                    uploadsId = items[0].contentDetails.relatedPlaylists.uploads;
-                } else {
-                    var searchRes = await fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=' + encodeURIComponent(YOUTUBE_CHANNEL_USERNAME) + '&maxResults=5&key=' + encodeURIComponent(YOUTUBE_API_KEY));
-                    var searchJson = await searchRes.json();
-                    if (searchJson.error) throw new Error(searchJson.error.message || 'Search failed');
-                    var searchItems = searchJson.items || [];
-                    var channelId = null;
-                    for (var s = 0; s < searchItems.length; s++) {
-                        var cid = searchItems[s].snippet && searchItems[s].snippet.channelId;
-                        if (cid) { channelId = cid; break; }
-                    }
-                    if (!channelId) throw new Error('Channel not found: ' + YOUTUBE_CHANNEL_USERNAME);
-                    var channelByIdRes = await fetch('https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=' + encodeURIComponent(channelId) + '&key=' + encodeURIComponent(YOUTUBE_API_KEY));
-                    var channelByIdJson = await channelByIdRes.json();
-                    if (channelByIdJson.error || !channelByIdJson.items || channelByIdJson.items.length === 0) throw new Error('Channel not found: ' + YOUTUBE_CHANNEL_USERNAME);
-                    uploadsId = channelByIdJson.items[0].contentDetails.relatedPlaylists.uploads;
-                }
-
-                var playlistRes = await fetch('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=50&playlistId=' + encodeURIComponent(uploadsId) + '&key=' + encodeURIComponent(YOUTUBE_API_KEY));
-                var playlistJson = await playlistRes.json();
-                if (playlistJson.error) throw new Error(playlistJson.error.message || 'Playlist request failed');
-                var playlistItems = playlistJson.items || [];
-                var videoIds = playlistItems.map(function (i) {
-                    return (i.contentDetails && i.contentDetails.videoId) || (i.snippet && i.snippet.resourceId && i.snippet.resourceId.videoId) || '';
-                }).filter(Boolean);
-                if (videoIds.length === 0) {
-                    youtubeVideos = [];
-                    mergeYouTubeIntoContentData(youtubeVideos);
-                    setYoutubeStatus('No videos found.');
-                    return;
-                }
-
-                var videos = [];
-                for (var i = 0; i < videoIds.length; i += 50) {
-                    var batch = videoIds.slice(i, i + 50);
-                    var videosRes = await fetch('https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=' + batch.join(',') + '&key=' + encodeURIComponent(YOUTUBE_API_KEY));
-                    var videosJson = await videosRes.json();
-                    if (videosJson.error) throw new Error(videosJson.error.message || 'Videos request failed');
-                    var list = videosJson.items || [];
-                    list.forEach(function (v) {
-                        var sn = v.snippet || {};
-                        var stat = v.statistics || {};
-                        videos.push({
-                            videoId: v.id,
-                            title: sn.title || 'Untitled',
-                            publishedAt: sn.publishedAt || '',
-                            viewCount: parseInt(stat.viewCount, 10) || 0,
-                            likeCount: parseInt(stat.likeCount, 10) || 0,
-                            commentCount: parseInt(stat.commentCount, 10) || 0
-                        });
-                    });
-                }
-                youtubeVideos = videos;
-                mergeYouTubeIntoContentData(youtubeVideos);
-                setYoutubeStatus('Fetched ' + youtubeVideos.length + ' video(s).');
-            } catch (err) {
-                youtubeVideos = [];
-                setYoutubeStatus('Error: ' + (err.message || 'Failed to fetch'), true);
-            }
-        }
-
-        function mergeYouTubeIntoContentData(videos) {
-            if (!videos || videos.length === 0) return;
-            // Match by date: for each contentData row, find closest YouTube video by date and set views.youtube (and optional engagement)
-            const parseDate = function (s) {
-                if (!s) return 0;
-                const d = new Date(s);
-                return isNaN(d.getTime()) ? 0 : d.getTime();
-            };
-            contentData.forEach(function (row) {
-                const rowTime = parseDate(row.postedDate);
-                if (!rowTime) return;
-                let best = null;
-                let bestDiff = Infinity;
-                videos.forEach(function (v) {
-                    const vt = parseDate(v.publishedAt);
-                    if (!vt) return;
-                    const diff = Math.abs(rowTime - vt);
-                    if (diff < bestDiff) { bestDiff = diff; best = v; }
-                });
-                if (best) row.views.youtube = best.viewCount;
-            });
-        }
-
-        function youtubePerformance(v) {
-            var total = v.viewCount || 0;
-            var engagement = (v.likeCount || 0) + (v.commentCount || 0);
-            var rate = total > 0 ? (engagement / total) * 100 : 0;
-            if (rate > 5 || total > 10000) return 'high';
-            if (rate < 1 && total < 1000) return 'low';
-            return 'average';
-        }
-
-        function renderYouTubeTable() {
-            buildLiveContent();
-            renderContentCalendar();
-        }
-
-        function escapeHtml(s) {
-            if (!s) return '';
-            const div = document.createElement('div');
-            div.textContent = s;
-            return div.innerHTML;
-        }
-
-        // Mock Data
-        const contentData = [
-            {
-                contentNumber: 'Content 646',
-                contentType: 'shared',
-                hook: 'One thing this Sydney hostel does differently',
-                postedDate: '2026-02-07',
-                views: { instagram: 278, facebook: 50, tiktok: 303, youtube: 100 },
-                retention: { instagram: 40, facebook: 30, tiktok: 56, youtube: 45 },
-                likes: 15, comments: 3, saves: 5, shares: 2, newFollows: 1,
-                ads: { tiktok: false, meta: false, google: false },
-                boosted: {
-                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    likes: 0, comments: 0, saves: 0, shares: 0
-                }
-            },
-            {
-                contentNumber: 'Content 661',
-                contentType: 'private',
-                hook: 'This is the smarter way to stay in Sydney',
-                postedDate: '2026-02-11',
-                views: { instagram: 779, facebook: 200, tiktok: 695, youtube: 450 },
-                retention: { instagram: 57, facebook: 42, tiktok: 47, youtube: 55 },
-                likes: 45, comments: 12, saves: 20, shares: 8, newFollows: 5,
-                ads: { tiktok: true, meta: true, google: false },
-                boosted: {
-                    views: { instagram: 1200, facebook: 850, tiktok: 1500, youtube: 450 },
-                    retention: { instagram: 52, facebook: 38, tiktok: 44, youtube: 55 },
-                    likes: 85, comments: 28, saves: 45, shares: 18
-                }
-            },
-            {
-                contentNumber: 'Content 656',
-                contentType: 'shared',
-                hook: "Why weight loss alone isn't always enough?",
-                postedDate: '2026-02-06',
-                views: { instagram: 261, facebook: 120, tiktok: 295, youtube: 80 },
-                retention: { instagram: 19, facebook: 25, tiktok: 45, youtube: 30 },
-                likes: 8, comments: 1, saves: 2, shares: 1, newFollows: 0,
-                ads: { tiktok: false, meta: false, google: false },
-                boosted: {
-                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    likes: 0, comments: 0, saves: 0, shares: 0
-                }
-            },
-            {
-                contentNumber: 'Content 657',
-                contentType: 'shared',
-                hook: "Staying at this Sydney hostel means no $40 brunch on bills",
-                postedDate: '2026-02-17',
-                views: { instagram: 174, facebook: 151, tiktok: 295, youtube: 107 },
-                retention: { instagram: 19, facebook: 25, tiktok: 45, youtube: 30 },
-                likes: 3, comments: 0, saves: 0, shares: 0, newFollows: 0,
-                ads: { tiktok: false, meta: false, google: false },
-                boosted: {
-                    views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
-                    likes: 0, comments: 0, saves: 0, shares: 0
-                }
-            }
-        ];
-
-        // Calculate performance
-        function calculatePerformance(item) {
-            const avgRetention = (item.retention.instagram + item.retention.facebook +
-                item.retention.tiktok + item.retention.youtube) / 4;
-            const totalViews = item.views.instagram + item.views.facebook +
-                item.views.tiktok + item.views.youtube;
-            const engagementRate = ((item.likes + item.comments + item.saves + item.shares) / totalViews) * 100;
-
-            if (avgRetention > 40 || engagementRate > 5) return 'high';
-            if (avgRetention < 25 && engagementRate < 2) return 'low';
-            return 'average';
-        }
-
-        // Render content calendar
-        function renderContentCalendar() {
-            var tbody = document.getElementById('content-table-body');
-            var typeFilter = document.getElementById('type-filter').value;
-            var perfFilter = document.getElementById('perf-filter').value;
-
-            // Use live API data when available
-            if (liveContent && liveContent.length > 0) {
-                var crossPlatform = liveContent.filter(function (item) {
-                    return (item.views.ig || 0) > 0 || (item.views.fb || 0) > 0 || (item.views.tt || 0) > 0;
-                }).slice(0, 20);
-                var liveFiltered = crossPlatform.filter(function (item) {
-                    if (perfFilter !== 'all' && liveItemPerformance(item) !== perfFilter) return false;
-                    return true;
-                });
-                tbody.innerHTML = liveFiltered.map(function (item, idx) {
-                    var dateStr = item.postedDate ? new Date(item.postedDate).toLocaleDateString() : '—';
-                    var perf = liveItemPerformance(item);
-                    var totalViews = (item.views.ig || 0) + (item.views.fb || 0) + (item.views.tt || 0) + (item.views.yt || 0);
-                    var hook = escapeHtml(item.hook || '');
-                    var hasMultiple = [item.views.ig, item.views.fb, item.views.tt, item.views.yt].filter(function (v) { return v > 0; }).length > 1;
-                    var contentType = hasMultiple ? 'shared' : 'video';
-                    return '<tr>' +
-                        '<td>Content ' + (idx + 1) + '</td>' +
-                        '<td><span class="type-badge type-' + contentType + '">' + contentType + '</span></td>' +
-                        '<td>' + (hook || '—') + '</td>' +
-                        '<td>' + dateStr + '</td>' +
-                        '<td><span class="performance-badge badge-' + perf + '">' + perf + '</span></td>' +
-                        '<td><strong>' + Number(totalViews).toLocaleString() + '</strong></td>' +
-                        '<td>' +
-                        '<div><span class="platform-icon ig">IG</span>' + Number(item.views.ig || 0).toLocaleString() + '</div>' +
-                        '<div><span class="platform-icon fb">FB</span>' + Number(item.views.fb || 0).toLocaleString() + '</div>' +
-                        '<div><span class="platform-icon tt">TT</span>' + Number(item.views.tt || 0).toLocaleString() + '</div>' +
-                        '<div><span class="platform-icon yt">YT</span>' + Number(item.views.yt || 0).toLocaleString() + '</div>' +
-                        '</td>' +
-                        '<td>' + (totalViews > 0 ? ((((item.likes || 0) + (item.comments || 0) + (item.saves || 0) + (item.shares || 0)) / totalViews) * 100).toFixed(2) + '%' : '—') + '</td>' +
-                        '<td>' +
-                        '<div>❤️ ' + Number(item.likes || 0) + '</div>' +
-                        '<div>💬 ' + Number(item.comments || 0) + '</div>' +
-                        '<div>🔖 ' + Number(item.saves || 0) + '</div>' +
-                        '<div>🔄 ' + Number(item.shares || 0) + '</div>' +
-                        '</td>' +
-                        '</tr>';
-                }).join('');
-                return;
-            }
-
-            // Show loading placeholder while APIs are fetching
-            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:3rem;color:#718096;">Loading live data from APIs…</td></tr>';
-        }
-
-        // Render organic vs paid
-        function renderOrganicVsPaid() {
-            var grid = document.getElementById('comparison-grid');
-
-            // Use live data if available (same source as Content Calendar)
-            var source = [];
-            if (liveContent && liveContent.length > 0) {
-                source = liveContent.filter(function (item) {
-                    return (item.views.ig || 0) > 0 || (item.views.fb || 0) > 0 || (item.views.tt || 0) > 0;
-                }).slice(0, 20);
-            }
-
-            if (source.length === 0) {
-                grid.innerHTML = '<div style="text-align:center; padding:4rem; color:#718096;"><p>' +
-                    (liveContent.length === 0 ? 'Loading live data… please wait.' : 'No cross-platform content found.') +
-                    '</p></div>';
-                return;
-            }
-
-            grid.innerHTML = source.map(function (item, idx) {
-                var hook = escapeHtml(item.hook || '');
-                var dateStr = item.postedDate ? new Date(item.postedDate).toLocaleDateString() : '—';
-                var ig = item.views.ig || 0;
-                var fb = item.views.fb || 0;
-                var tt = item.views.tt || 0;
-                var yt = item.views.yt || 0;
-                var totalViews = ig + fb + tt + yt;
-
-                // Find best platform
-                var platforms = [{ name: 'IG', val: ig }, { name: 'FB', val: fb }, { name: 'TT', val: tt }, { name: 'YT', val: yt }];
-                var best = platforms.reduce(function (a, b) { return b.val > a.val ? b : a; }, platforms[0]);
-
-                // View share % per platform
-                function pct(v) { return totalViews > 0 ? ((v / totalViews) * 100).toFixed(1) : '0.0'; }
-
-                var totalEng = (item.likes || 0) + (item.comments || 0) + (item.saves || 0) + (item.shares || 0);
-                var engRate = totalViews > 0 ? ((totalEng / totalViews) * 100).toFixed(2) : '0.00';
-
-                return '<div class="comparison-card">' +
-                    '<div class="card-header">' +
-                    '<h3>Content ' + (idx + 1) + '</h3>' +
-                    '<p>' + (hook || '—') + '</p>' +
-                    '<div style="font-size:0.8rem;color:#718096;margin-top:0.25rem;">' + dateStr + '</div>' +
-                    '<div style="margin-top:0.5rem;">' +
-                    '<span class="platform-tag" style="background:#e53e3e;">Best: ' + best.name + ' (' + Number(best.val).toLocaleString() + ' views)</span>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div style="padding:1.5rem;">' +
-                    '<h4 style="margin-bottom:1rem;">Platform Views Breakdown</h4>' +
-                    '<div class="comparison-row">' +
-                    '<div class="metric-column organic">' +
-                    '<span class="label">Views</span>' +
-                    '<div><span class="platform-icon ig">IG</span> ' + Number(ig).toLocaleString() + ' <span style="color:#718096;font-size:0.8rem;">(' + pct(ig) + '%)</span></div>' +
-                    '<div><span class="platform-icon fb">FB</span> ' + Number(fb).toLocaleString() + ' <span style="color:#718096;font-size:0.8rem;">(' + pct(fb) + '%)</span></div>' +
-                    '<div><span class="platform-icon tt">TT</span> ' + Number(tt).toLocaleString() + ' <span style="color:#718096;font-size:0.8rem;">(' + pct(tt) + '%)</span></div>' +
-                    '<div><span class="platform-icon yt">YT</span> ' + Number(yt).toLocaleString() + ' <span style="color:#718096;font-size:0.8rem;">(' + pct(yt) + '%)</span></div>' +
-                    '<div style="margin-top:0.5rem;font-weight:600;">Total: ' + Number(totalViews).toLocaleString() + '</div>' +
-                    '</div>' +
-                    '<div class="metric-column boosted">' +
-                    '<span class="label">Engagement</span>' +
-                    '<div>❤️ ' + Number(item.likes || 0) + '</div>' +
-                    '<div>💬 ' + Number(item.comments || 0) + '</div>' +
-                    '<div>🔖 ' + Number(item.saves || 0) + '</div>' +
-                    '<div>🔄 ' + Number(item.shares || 0) + '</div>' +
-                    '<div style="margin-top:0.5rem;font-weight:600;">Rate: ' + engRate + '%</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>';
-            }).join('');
-        }
+    // ─── FETCH ALL DATA FROM BACKEND ──────────────────────────────────────────
+    // Calls GET /api/all on server.js — the server fetches YouTube, Instagram,
+    // Facebook and TikTok, merges them by date, and returns a ready-to-render
+    // liveContent[] array.
+    //
+    // To verify the backend is running, open in your browser:
+    //   http://localhost:3000/api/all      → merged content (what this calls)
+    //   http://localhost:3000/api/instagram → raw Instagram posts
+    //   http://localhost:3000/api/facebook  → raw Facebook posts
+    //   http://localhost:3000/api/tiktok    → raw TikTok ads data
+    //   http://localhost:3000/api/youtube   → raw YouTube videos
+    // JSON array returned → backend is working ✅
+    // Error / empty       → server.js is not running ❌
+    async function fetchAllLiveData() {
+      setYoutubeStatus("Loading all platforms…");
+      try {
+        var res = await fetch("/api/all");
+        var data = await res.json();
+        if (data.error) throw new Error(data.error);
+        liveContent = Array.isArray(data) ? data : [];
+        renderContentCalendar();
+        setYoutubeStatus("Loaded " + liveContent.length + " content row(s).");
+      } catch (e) {
+        setYoutubeStatus("Error: " + (e && e.message ? e.message : "Failed"), true);
+      }
+    }
 
 
-        // Tab switching
-        function showTab(tab) {
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(t => t.classList.remove('active'));
-            if (event && event.target) event.target.classList.add('active');
-            else {
-                const idx = tab === 'calendar' ? 0 : 1;
-                if (tabs[idx]) tabs[idx].classList.add('active');
-            }
 
-            document.getElementById('calendar-tab').classList.add('hidden');
-            document.getElementById('organic-tab').classList.add('hidden');
+    function escapeHtml(s) {
+      if (!s) return "";
+      const div = document.createElement("div");
+      div.textContent = s;
+      return div.innerHTML;
+    }
 
-            if (tab === 'calendar') {
-                document.getElementById('calendar-tab').classList.remove('hidden');
-                renderContentCalendar();
-            } else {
-                document.getElementById('organic-tab').classList.remove('hidden');
-                renderOrganicVsPaid();
-            }
-        }
+    // ─── MOCK / FALLBACK DATA ─────────────────────────────────────────────────
+    // This static data is only used if the live API fetch hasn't completed yet.
+    // Once the backend returns real data, liveContent[] takes over and this is ignored.
+    const contentData = [
+      {
+        contentNumber: "Content 646",
+        contentType: "shared",
+        hook: "One thing this Sydney hostel does differently",
+        postedDate: "2026-02-07",
+        views: { instagram: 278, facebook: 50, tiktok: 303, youtube: 100 },
+        retention: { instagram: 40, facebook: 30, tiktok: 56, youtube: 45 },
+        likes: 15,
+        comments: 3,
+        saves: 5,
+        shares: 2,
+        newFollows: 1,
+        ads: { tiktok: false, meta: false, google: false },
+        boosted: {
+          views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+          retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+          likes: 0,
+          comments: 0,
+          saves: 0,
+          shares: 0,
+        },
+      },
+      {
+        contentNumber: "Content 661",
+        contentType: "private",
+        hook: "This is the smarter way to stay in Sydney",
+        postedDate: "2026-02-11",
+        views: { instagram: 779, facebook: 200, tiktok: 695, youtube: 450 },
+        retention: { instagram: 57, facebook: 42, tiktok: 47, youtube: 55 },
+        likes: 45,
+        comments: 12,
+        saves: 20,
+        shares: 8,
+        newFollows: 5,
+        ads: { tiktok: true, meta: true, google: false },
+        boosted: {
+          views: {
+            instagram: 1200,
+            facebook: 850,
+            tiktok: 1500,
+            youtube: 450,
+          },
+          retention: { instagram: 52, facebook: 38, tiktok: 44, youtube: 55 },
+          likes: 85,
+          comments: 28,
+          saves: 45,
+          shares: 18,
+        },
+      },
+      {
+        contentNumber: "Content 656",
+        contentType: "shared",
+        hook: "Why weight loss alone isn't always enough?",
+        postedDate: "2026-02-06",
+        views: { instagram: 261, facebook: 120, tiktok: 295, youtube: 80 },
+        retention: { instagram: 19, facebook: 25, tiktok: 45, youtube: 30 },
+        likes: 8,
+        comments: 1,
+        saves: 2,
+        shares: 1,
+        newFollows: 0,
+        ads: { tiktok: false, meta: false, google: false },
+        boosted: {
+          views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+          retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+          likes: 0,
+          comments: 0,
+          saves: 0,
+          shares: 0,
+        },
+      },
+      {
+        contentNumber: "Content 657",
+        contentType: "shared",
+        hook: "Staying at this Sydney hostel means no $40 brunch on bills",
+        postedDate: "2026-02-17",
+        views: { instagram: 174, facebook: 151, tiktok: 295, youtube: 107 },
+        retention: { instagram: 19, facebook: 25, tiktok: 45, youtube: 30 },
+        likes: 3,
+        comments: 0,
+        saves: 0,
+        shares: 0,
+        newFollows: 0,
+        ads: { tiktok: false, meta: false, google: false },
+        boosted: {
+          views: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+          retention: { instagram: 0, facebook: 0, tiktok: 0, youtube: 0 },
+          likes: 0,
+          comments: 0,
+          saves: 0,
+          shares: 0,
+        },
+      },
+    ];
 
-        // Filter content
-        function filterContent() {
-            renderContentCalendar();
-        }
+    // Calculate performance
+    function calculatePerformance(item) {
+      const avgRetention =
+        (item.retention.instagram +
+          item.retention.facebook +
+          item.retention.tiktok +
+          item.retention.youtube) /
+        4;
+      const totalViews =
+        item.views.instagram +
+        item.views.facebook +
+        item.views.tiktok +
+        item.views.youtube;
+      const engagementRate =
+        ((item.likes + item.comments + item.saves + item.shares) /
+          totalViews) *
+        100;
 
-        // Initialize: show loading state then auto-fetch live data
-        (function init() {
-            renderContentCalendar();
-            fetchAllLiveData();
-        })();
-    </script>
+      if (avgRetention > 40 || engagementRate > 5) return "high";
+      if (avgRetention < 25 && engagementRate < 2) return "low";
+      return "average";
+    }
+
+    // Render content calendar
+    function renderContentCalendar() {
+      var tbody = document.getElementById("content-table-body");
+      var typeFilter = document.getElementById("type-filter").value;
+      var perfFilter = document.getElementById("perf-filter").value;
+
+      // Use live API data when available
+      if (liveContent && liveContent.length > 0) {
+        var crossPlatform = liveContent
+          .filter(function (item) {
+            // Show any row that has views on at least one platform
+            return (
+              (item.views.ig || 0) > 0 ||
+              (item.views.fb || 0) > 0 ||
+              (item.views.tt || 0) > 0 ||
+              (item.views.yt || 0) > 0
+            );
+          });
+        var liveFiltered = crossPlatform.filter(function (item) {
+          if (
+            perfFilter !== "all" &&
+            liveItemPerformance(item) !== perfFilter
+          )
+            return false;
+          return true;
+        });
+        tbody.innerHTML = liveFiltered
+          .map(function (item, idx) {
+            var dateStr = item.postedDate
+              ? new Date(item.postedDate).toLocaleDateString()
+              : "—";
+            var perf = liveItemPerformance(item);
+            var totalViews =
+              (item.views.ig || 0) +
+              (item.views.fb || 0) +
+              (item.views.tt || 0) +
+              (item.views.yt || 0);
+            var hook = escapeHtml(item.hook || "");
+            var hasMultiple =
+              [
+                item.views.ig,
+                item.views.fb,
+                item.views.tt,
+                item.views.yt,
+              ].filter(function (v) {
+                return v > 0;
+              }).length > 1;
+            var contentType = hasMultiple ? "shared" : "video";
+            return (
+              "<tr>" +
+              "<td>Content " +
+              (idx + 1) +
+              "</td>" +
+              '<td><span class="type-badge type-' +
+              contentType +
+              '">' +
+              contentType +
+              "</span></td>" +
+              "<td>" +
+              (hook || "—") +
+              "</td>" +
+              "<td>" +
+              dateStr +
+              "</td>" +
+              '<td><span class="performance-badge badge-' +
+              perf +
+              '">' +
+              perf +
+              "</span></td>" +
+              "<td><strong>" +
+              Number(totalViews).toLocaleString() +
+              "</strong></td>" +
+              "<td>" +
+              '<div><span class="platform-icon ig">IG</span>' +
+              Number(item.views.ig || 0).toLocaleString() +
+              "</div>" +
+              '<div><span class="platform-icon fb">FB</span>' +
+              Number(item.views.fb || 0).toLocaleString() +
+              "</div>" +
+              '<div><span class="platform-icon tt">TT</span>' +
+              Number(item.views.tt || 0).toLocaleString() +
+              "</div>" +
+              '<div><span class="platform-icon yt">YT</span>' +
+              Number(item.views.yt || 0).toLocaleString() +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              (totalViews > 0
+                ? (
+                  (((item.likes || 0) +
+                    (item.comments || 0) +
+                    (item.saves || 0) +
+                    (item.shares || 0)) /
+                    totalViews) *
+                  100
+                ).toFixed(2) + "%"
+                : "—") +
+              "</td>" +
+              "<td>" +
+              "<div>❤️ " +
+              Number(item.likes || 0) +
+              "</div>" +
+              "<div>💬 " +
+              Number(item.comments || 0) +
+              "</div>" +
+              "<div>🔖 " +
+              Number(item.saves || 0) +
+              "</div>" +
+              "<div>🔄 " +
+              Number(item.shares || 0) +
+              "</div>" +
+              "</td>" +
+              "</tr>"
+            );
+          })
+          .join("");
+        return;
+      }
+
+      // Show loading placeholder while APIs are fetching
+      tbody.innerHTML =
+        '<tr><td colspan="9" style="text-align:center;padding:3rem;color:#718096;">Loading live data from APIs…</td></tr>';
+    }
+
+    // Render organic vs paid
+    function renderOrganicVsPaid() {
+      var grid = document.getElementById("comparison-grid");
+
+      // Use live data if available (same source as Content Calendar)
+      var source = [];
+      if (liveContent && liveContent.length > 0) {
+        source = liveContent
+          .filter(function (item) {
+            // Show any row that has views on at least one platform
+            return (
+              (item.views.ig || 0) > 0 ||
+              (item.views.fb || 0) > 0 ||
+              (item.views.tt || 0) > 0 ||
+              (item.views.yt || 0) > 0
+            );
+          });
+      }
+
+      if (source.length === 0) {
+        grid.innerHTML =
+          '<div style="text-align:center; padding:4rem; color:#718096;"><p>' +
+          (liveContent.length === 0
+            ? "Loading live data… please wait."
+            : "No cross-platform content found.") +
+          "</p></div>";
+        return;
+      }
+
+      grid.innerHTML = source
+        .map(function (item, idx) {
+          var hook = escapeHtml(item.hook || "");
+          var dateStr = item.postedDate
+            ? new Date(item.postedDate).toLocaleDateString()
+            : "—";
+          var ig = item.views.ig || 0;
+          var fb = item.views.fb || 0;
+          var tt = item.views.tt || 0;
+          var yt = item.views.yt || 0;
+          var totalViews = ig + fb + tt + yt;
+
+          // Find best platform
+          var platforms = [
+            { name: "IG", val: ig },
+            { name: "FB", val: fb },
+            { name: "TT", val: tt },
+            { name: "YT", val: yt },
+          ];
+          var best = platforms.reduce(function (a, b) {
+            return b.val > a.val ? b : a;
+          }, platforms[0]);
+
+          // View share % per platform
+          function pct(v) {
+            return totalViews > 0
+              ? ((v / totalViews) * 100).toFixed(1)
+              : "0.0";
+          }
+
+          var totalEng =
+            (item.likes || 0) +
+            (item.comments || 0) +
+            (item.saves || 0) +
+            (item.shares || 0);
+          var engRate =
+            totalViews > 0
+              ? ((totalEng / totalViews) * 100).toFixed(2)
+              : "0.00";
+
+          return (
+            '<div class="comparison-card">' +
+            '<div class="card-header">' +
+            "<h3>Content " +
+            (idx + 1) +
+            "</h3>" +
+            "<p>" +
+            (hook || "—") +
+            "</p>" +
+            '<div style="font-size:0.8rem;color:#718096;margin-top:0.25rem;">' +
+            dateStr +
+            "</div>" +
+            '<div style="margin-top:0.5rem;">' +
+            '<span class="platform-tag" style="background:#e53e3e;">Best: ' +
+            best.name +
+            " (" +
+            Number(best.val).toLocaleString() +
+            " views)</span>" +
+            "</div>" +
+            "</div>" +
+            '<div style="padding:1.5rem;">' +
+            '<h4 style="margin-bottom:1rem;">Platform Views Breakdown</h4>' +
+            '<div class="comparison-row">' +
+            '<div class="metric-column organic">' +
+            '<span class="label">Views</span>' +
+            '<div><span class="platform-icon ig">IG</span> ' +
+            Number(ig).toLocaleString() +
+            ' <span style="color:#718096;font-size:0.8rem;">(' +
+            pct(ig) +
+            "%)</span></div>" +
+            '<div><span class="platform-icon fb">FB</span> ' +
+            Number(fb).toLocaleString() +
+            ' <span style="color:#718096;font-size:0.8rem;">(' +
+            pct(fb) +
+            "%)</span></div>" +
+            '<div><span class="platform-icon tt">TT</span> ' +
+            Number(tt).toLocaleString() +
+            ' <span style="color:#718096;font-size:0.8rem;">(' +
+            pct(tt) +
+            "%)</span></div>" +
+            '<div><span class="platform-icon yt">YT</span> ' +
+            Number(yt).toLocaleString() +
+            ' <span style="color:#718096;font-size:0.8rem;">(' +
+            pct(yt) +
+            "%)</span></div>" +
+            '<div style="margin-top:0.5rem;font-weight:600;">Total: ' +
+            Number(totalViews).toLocaleString() +
+            "</div>" +
+            "</div>" +
+            '<div class="metric-column boosted">' +
+            '<span class="label">Engagement</span>' +
+            "<div>❤️ " +
+            Number(item.likes || 0) +
+            "</div>" +
+            "<div>💬 " +
+            Number(item.comments || 0) +
+            "</div>" +
+            "<div>🔖 " +
+            Number(item.saves || 0) +
+            "</div>" +
+            "<div>🔄 " +
+            Number(item.shares || 0) +
+            "</div>" +
+            '<div style="margin-top:0.5rem;font-weight:600;">Rate: ' +
+            engRate +
+            "%</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>"
+          );
+        })
+        .join("");
+    }
+
+    // Tab switching
+    function showTab(tab) {
+      const tabs = document.querySelectorAll(".tab");
+      tabs.forEach((t) => t.classList.remove("active"));
+      if (event && event.target) event.target.classList.add("active");
+      else {
+        const idx = tab === "calendar" ? 0 : 1;
+        if (tabs[idx]) tabs[idx].classList.add("active");
+      }
+
+      document.getElementById("calendar-tab").classList.add("hidden");
+      document.getElementById("organic-tab").classList.add("hidden");
+
+      if (tab === "calendar") {
+        document.getElementById("calendar-tab").classList.remove("hidden");
+        renderContentCalendar();
+      } else {
+        document.getElementById("organic-tab").classList.remove("hidden");
+        renderOrganicVsPaid();
+      }
+    }
+
+    // Filter content
+    function filterContent() {
+      renderContentCalendar();
+    }
+
+    // Initialize: show loading state then auto-fetch live data
+    (function init() {
+      renderContentCalendar();
+      fetchAllLiveData();
+    })();
+  </script>
 </body>
 
 </html>
+
+
+
+<!-- headers = { 
+
+"Access-Token": access_token, 
+
+"Content-Type": "application/json" 
+
+}
+
+
+
+
+adv_params = { 
+
+"advertiser_id": advertiser_id, 
+
+"report_type": "BASIC", 
+
+"data_level": "AUCTION_ADVERTISER", 
+
+"dimensions": json.dumps(["advertiser_id", "stat_time_day"]), 
+
+"metrics": json.dumps(["spend"]), 
+
+"start_date": start_date, 
+
+"end_date": end_date, 
+
+"page": 1, 
+
+"page_size": 200 
+
+}
+
+TikTok Access Token: 7cd9c2f248797ead3ebbffacc550584a748e260b
+
+ 
+
+TikTok Advertiser ID:
+
+7512751505938694162
+
+await fetch("https://business-api.tiktok.com/open_api/v1.3/report/integrated/get/", headers = {
+
+    "Access-Token": "7cd9c2f248797ead3ebbffacc550584a748e260b",
+
+    "Content-Type": "application/json"
+
+}); -->
